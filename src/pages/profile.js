@@ -289,7 +289,7 @@ const OptionsMenu = ({ handleCloseMenu }) => {
     setTimeout(async () => {
       await client.clearStore();
       signOut();
-      history.push("/");
+      // history.push("/");
       // console.log('client', client);
       // window.location.reload();
     }, 2000);
