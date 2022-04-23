@@ -13,6 +13,7 @@
     "apollo-cache-inmemory": "^1.6.5",
     "apollo-client": "^2.6.8",
     "apollo-link-ws": "^1.0.20",
+    "aws-amplify": "^4.3.20",
     "date-fns": "^2.10.0",
     "escape-html": "^1.0.3",
     "firebase": "^7.24.0",
