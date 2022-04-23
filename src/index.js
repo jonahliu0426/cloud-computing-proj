@@ -7,6 +7,9 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { ApolloProvider } from "@apollo/client";
 import client from "./graphql/client";
 import AuthProvider from "./auth";
+import Amplify, { Auth } from 'aws-amplify';
+import awsconfig from './aws-exports';
+Amplify.configure(awsconfig);
 
 class ErrorBoundary extends React.Component {
   state = { hasError: false };

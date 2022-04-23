@@ -14,6 +14,9 @@ import createApolloClient from "./graphql/client";
 import { useSubscription } from "@apollo/client";
 import { ME } from "./graphql/subscriptions";
 import LoadingScreen from "./components/shared/LoadingScreen";
+import Amplify, { Auth } from 'aws-amplify';
+import awsconfig from './aws-exports';
+Amplify.configure(awsconfig);
 
 export const UserContext = React.createContext();
 
