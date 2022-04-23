@@ -13,9 +13,7 @@ import { useLazyQuery } from "@apollo/client";
 import { UserContext } from "../../App";
 import AddPostDialog from "../post/AddPostDialog";
 import { isAfter } from "date-fns";
-import { create } from "domain";
-import { useMutation } from "@apollo/client";
-import { CHECK_NOTIFICATIONS } from "../../graphql/mutations";
+
 
 
 function Navbar({ minimalNavbar }) {

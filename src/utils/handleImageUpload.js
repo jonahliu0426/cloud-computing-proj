@@ -1,4 +1,4 @@
-import { userInfo } from "os";
+// import { userInfo } from "os";
 
 const handleImageUpload = async ({ user, media, stateFunction, gqlFunction, actionType, postData }) => {
     let myHeaders = new Headers();
