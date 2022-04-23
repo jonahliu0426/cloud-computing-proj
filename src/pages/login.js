@@ -91,7 +91,7 @@ const LoginPage = () => {
                     label="Username, email or phone"
                     margin="dense"
                     className={classes.textField}
-                    // autoComplete="username"
+                    autoComplete="username"
                     error={!!error}
                     value={value}
                     onChange={onChange}
@@ -113,7 +113,7 @@ const LoginPage = () => {
                     type={showPassword ? "text" : "password"}
                     margin="dense"
                     className={classes.textField}
-                    // autoComplete="current-password"
+                    autoComplete="current-password"
                     value={value}
                     onChange={onChange}
                     error={!!error}

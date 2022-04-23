@@ -24,7 +24,7 @@ export const UserContext = React.createContext();
 function App() {
   const { authState } = React.useContext(AuthContext);
   const isAuth = authState.status === "in";
-  const userId = isAuth ? authState.user.uid : null;
+  const userId = isAuth ? authState.user.username : null;
   console.log('userId', userId);
   const variables = { userId };
   console.log('variables', variables);

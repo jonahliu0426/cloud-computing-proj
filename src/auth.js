@@ -102,20 +102,20 @@ function AuthProvider({ children }) {
                 }
             });
             console.log(data);
-            if (data.additionalUserInfo.isNewUser) {
-                const variables = {
-                    userId: data.user.uid,
-                    name: formData.name,
-                    username: formData.username,
-                    email: data.user.email,
-                    bio: "",
-                    website: "",
-                    phoneNumber: "",
-                    profileImage: defaultUserImage
-                }
-                await createUser({ variables });
-                await logInWithEmailAndPassword(username, password);
+
+            const variables = {
+                userId: data.userSub,
+                name: formData.name,
+                username: formData.username,
+                email: data.user.username,
+                bio: "",
+                website: "",
+                phoneNumber: "",
+                profileImage: defaultUserImage
             }
+            await createUser({ variables });
+            await logInWithEmailAndPassword(username, password);
+
         } catch (error) {
             console.error('error signing up', error);
         }
