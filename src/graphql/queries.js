@@ -1,5 +1,13 @@
 import { gql } from "apollo-boost";
 
+export const GET_USER_ID = gql`
+query getUser($userId: String) {
+  users(where: {user_id: {_eq: $userId}}) {
+    id
+  }
+}
+`
+
 export const CHECK_IF_USERNAME_TAKEN = gql`
   query checkIfUsernameTaken($username: String!) {
     users(where: { username: { _eq: $username } }) {

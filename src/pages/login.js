@@ -19,6 +19,11 @@ import isEmail from "validator/lib/isEmail";
 import { useApolloClient } from "@apollo/client";
 import { GET_USER_EMAIL } from "../graphql/queries";
 import { AuthError } from './signup';
+import { Auth } from 'aws-amplify';
+import googleBtn from '../images/btn_google_signin_light_normal_web@2x.png'
+import facebookBtn from '../images/facebook-login-button.png';
+import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth';
+
 
 const LoginPage = () => {
   const { handleSubmit, watch, formState, control } = useForm({
@@ -162,7 +167,10 @@ const LoginPage = () => {
               </div>
               <div className={classes.orLine} />
             </div>
+            <LoginWithGoogle />
             <LoginWithFacebook color="secondary" iconColor="blue" />
+            <LoginWithAmazon />
+            {/* <LoginWithFacebook /> */}
             <AuthError error={error} />
             <Button fullWidth color="secondary">
               <Typography variant="caption">
@@ -193,18 +201,9 @@ export const LoginWithFacebook = ({ color, iconColor, variant }) => {
   const [error, setError] = React.useState('')
   const history = useHistory();
 
-  const handleLogInWithGoogle = async () => {
-    try {
-      await logInWithGoogle();
-      setTimeout(history.push('/'), 0);
-    } catch (error) {
-      console.error('Error logging in with Google', error)
-      setError(error.message)
-    }
-  }
   return (
     <>
-      <Button onClick={handleLogInWithGoogle} fullWidth color={color} variant={variant}>
+      <Button onClick={() => Auth.federatedSignIn({ provider: "Facebook" })} fullWidth color={color}>
         <img
           src={facebookIcon}
           alt="facebook icon"
@@ -216,6 +215,42 @@ export const LoginWithFacebook = ({ color, iconColor, variant }) => {
     </>
   )
 }
+
+export const LoginWithGoogle = () => {
+  const { loginWithGoogle } = React.useContext(AuthContext);
+
+  function handleGoogleLogin(e) {
+    e.preventDefault();
+    loginWithGoogle(e);
+  };
+
+  return (
+    <Button fullWidth onClick={handleGoogleLogin}>
+      <img src={googleBtn} alt="Google Sign In button"
+        className="googleSignIn"
+        style={{ height: "40px", width: "173px" }} />
+    </Button >
+  )
+}
+
+export const LoginWithAmazon = () => {
+  return (
+    <Button onClick={() => Auth.federatedSignIn({ provider: "Amazon" })}>Open Amazon</Button>
+  )
+}
+
+// export const LoginWithFacebook = () => {
+//   const classes = useLoginPageStyles();
+
+//   return (
+//     <Button onClick={() => Auth.federatedSignIn({ provider: CognitoHostedUIIdentityProvider.Facebook })}>
+//       <img src={FacebookIconBlue} alt="Facebook Sign In button"
+//         style={{ height: "30px", width: "180px" }}
+//         className={classes.facebookIcon} />
+//       Login With Facebook
+//     </Button>
+//   )
+// }
 
 export default LoginPage;
 

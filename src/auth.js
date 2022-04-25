@@ -1,86 +1,88 @@
-import { useMutation } from "@apollo/client";
-// import firebase from "firebase/app";
-// import "firebase/auth";
-// import "firebase/database";
-import React, { useState, useEffect } from "react";
+import { useMutation, useQuery } from "@apollo/client";
+import React from "react";
 import { CREATE_USER } from "./graphql/mutations";
+import { GET_USER_ID } from "./graphql/queries";
 import defaultUserImage from "./images/default-user-image.jpg";
-import { Auth } from 'aws-amplify';
+import { Auth, Hub } from 'aws-amplify';
 
-// import App from "./App";
 
-// const provider = new firebase.auth.GoogleAuthProvider();
-
-// Find these options in your Firebase console
-// firebase.initializeApp({
-//     apiKey: "AIzaSyAO0g6u0abbolbazkZauGxTz-27N6Wcsv0",
-//     authDomain: "instagram-react-webapp.firebaseapp.com",
-//     projectId: "instagram-react-webapp",
-//     storageBucket: "instagram-react-webapp.appspot.com",
-//     messagingSenderId: "289019282994",
-//     appId: "1:289019282994:web:024ab17e617eea40f95e2b",
-//     measurementId: "G-0FHCP1GQC5"
-// });
 
 export const AuthContext = React.createContext()
 
 function AuthProvider({ children }) {
-    const [authState, setAuthState] = useState({ status: "out" });
+    const [authState, setAuthState] = React.useState({ status: "out" });
     const [createUser] = useMutation(CREATE_USER);
 
-    // useEffect(() => {
-    //     firebase.auth().onAuthStateChanged(async user => {
-    //         if (user) {
-    //             const token = await user.getIdToken();
-    //             const idTokenResult = await user.getIdTokenResult();
-    //             const hasuraClaim =
-    //                 idTokenResult.claims["https://hasura.io/jwt/claims"];
 
-    //             if (hasuraClaim) {
-    //                 setAuthState({ status: "in", user, token });
-    //             } else {
-    //                 // Check if refresh is required.
-    //                 const metadataRef = firebase
-    //                     .database()
-    //                     .ref("metadata/" + user.uid + "/refreshTime");
+    async function getUser() {
+        try {
+            const data = await Auth.currentAuthenticatedUser();
+            console.log('credentials', data);
+            const { email, sub } = data.attributes;
+            const name = email.split('@')[0]
+            const username = `${name}${sub.slice(-5)}`;
+            const variables = {
+                userId: data.username,
+                name: username,
+                username,
+                email,
+                bio: "",
+                website: "",
+                phoneNumber: "",
+                profileImage: "",
+            }
+            createUser({ variables })
+            // setAuthState({ status: 'in', user: data });
+            console.log(authState)
+        } catch (err) {
+            console.log(err);
+        }
+    }
 
-    //                 metadataRef.on("value", async (data) => {
-    //                     if (!data.exists) return
-    //                     // Force refresh to pick up the latest custom claims changes.
-    //                     const token = await user.getIdToken(true);
-    //                     setAuthState({ status: "in", user, token });
-    //                 });
-    //             }
-    //         } else {
-    //             setAuthState({ status: "out" });
-    //         }
-    //     });
-    // }, []);
+    React.useEffect(() => {
+        Hub.listen('auth', async ({ payload }) => {
+            console.log(payload)
+            if (payload.event === 'signIn') {
+                const credentials = await Auth.currentAuthenticatedUser();
+                console.log('credentials', credentials);
+                if (credentials.username)
+                    setAuthState({ status: 'in', user: credentials });
+                console.log(authState);
 
-    // const logInWithGoogle = async () => {
-    //     const data = await firebase.auth().signInWithPopup(provider);
-    //     if (data.additionalUserInfo.isNewUser) {
-    //         // console.log({ data });
-    //         const { uid, displayName, email, photoURL } = data.user;
-    //         const username = `${displayName.replace(/\s+/g, "")}${uid.slice(-5)}`;
-    //         const variables = {
-    //             userId: uid,
-    //             name: displayName,
-    //             username,
-    //             email,
-    //             bio: "",
-    //             website: "",
-    //             phoneNumber: "",
-    //             profileImage: photoURL,
-    //         };
-    //         await createUser({ variables });
-    //     }
-    // };
+            }
+            if (payload.event === 'signOut') {
+                return setAuthState({ status: 'out' });
+                // return setLoading(false);
+            }
+        });
+        getUser();
+    }, []);
+
+    const loginWithGoogle = async () => {
+        // e.preventDefault();
+        try {
+            await Auth.federatedSignIn({ provider: "Google" });
+        } catch (error) {
+            console.error('Error creating user', error);
+        }
+
+    }
+
+    const loginWithFacebook = async () => {
+        try {
+            await Auth.federatedSignIn({ provider: "Facebook" });
+        } catch (error) {
+            console.error('Error creating user', error);
+        }
+    };
+    const loginWithAmazon = async () => {
+
+    };
 
     const logInWithEmailAndPassword = async (username, password) => {
         try {
             const data = await Auth.signIn(username, password);
-            setAuthState({ status: "in", user: data })
+            // setAuthState({ status: "in", user: data })
             return data;
         } catch (error) {
             console.error('error signing in', error);
@@ -126,7 +128,7 @@ function AuthProvider({ children }) {
         try {
             setAuthState({ status: "loading" });
             await Auth.signOut();
-            setAuthState({ status: "out" });
+            // setAuthState({ status: "out" });
         } catch (error) {
             console.error('error signing out: ', error);
         }
@@ -143,11 +145,14 @@ function AuthProvider({ children }) {
         <AuthContext.Provider
             value={{
                 authState,
-                // logInWithGoogle,
+                setAuthState,
                 signOut,
                 signUpWithEmailAndPassword,
                 logInWithEmailAndPassword,
-                updateEmail
+                updateEmail,
+                loginWithGoogle,
+                loginWithFacebook,
+                loginWithAmazon,
             }}
         >
             {children}
