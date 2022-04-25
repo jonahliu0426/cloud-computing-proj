@@ -7,9 +7,17 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { ApolloProvider } from "@apollo/client";
 import client from "./graphql/client";
 import AuthProvider from "./auth";
-import Amplify, { Auth } from 'aws-amplify';
-import awsconfig from './aws-exports';
-Amplify.configure(awsconfig);
+import Amplify, { Auth, API } from 'aws-amplify';
+import awsmobile from './aws-exports';
+
+window.LOG_LEVEL = 'DEBUG';
+
+
+export const UserContext = React.createContext();
+
+Auth.configure(awsmobile);
+
+console.log('updated config', awsmobile);
 
 class ErrorBoundary extends React.Component {
   state = { hasError: false };

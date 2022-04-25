@@ -14,15 +14,15 @@ import createApolloClient from "./graphql/client";
 import { useSubscription } from "@apollo/client";
 import { ME } from "./graphql/subscriptions";
 import LoadingScreen from "./components/shared/LoadingScreen";
-import Amplify, { Auth } from 'aws-amplify';
+import Amplify, { Auth, Hub } from 'aws-amplify';
 import awsconfig from './aws-exports';
-Amplify.configure(awsconfig);
+// Auth.configure(awsconfig);
 
 export const UserContext = React.createContext();
 
 
 function App() {
-  const { authState } = React.useContext(AuthContext);
+  const { authState, setAuthState } = React.useContext(AuthContext);
   const isAuth = authState.status === "in";
   const userId = isAuth ? authState.user.username : null;
   console.log('userId', userId);
@@ -35,6 +35,8 @@ function App() {
   const prevLocation = React.useRef(location);
   const modal = location.state?.modal;
 
+
+
   console.log('auth', authState)
 
   React.useEffect(() => {
@@ -43,8 +45,9 @@ function App() {
     }
   }, [location, modal, history.action]);
 
+
   if (loading) return <LoadingScreen />
-  console.log('data', data);
+  console.log('after loading', isAuth);
   if (!isAuth) {
     return (
       <Switch>
@@ -55,32 +58,32 @@ function App() {
     );
   }
 
-  if (data) {
-    console.log('data, ', data);
-    const isModalOpen = modal && prevLocation.current !== location;
-    const me = isAuth && data ? data.users[0] : null;
-    const currentUserId = me.id;
-    const followingIds = me.following.map(({ user }) => user.id)
-    const followerIds = me.followers.map(({ user }) => user.id);
-    const feedIds = [...followingIds, currentUserId];
+  // if (data) {
+  console.log('data, ', data);
+  const isModalOpen = modal && prevLocation.current !== location;
+  const me = isAuth && data ? data.users[0] : null;
+  const currentUserId = me.id;
+  const followingIds = me.following.map(({ user }) => user.id)
+  const followerIds = me.followers.map(({ user }) => user.id);
+  const feedIds = [...followingIds, currentUserId];
 
-    return (
-      <UserContext.Provider value={{ me, currentUserId, followerIds, followingIds, feedIds }}>
-        <Switch location={isModalOpen ? prevLocation.current : location}>
-          <Route exact path="/" component={FeedPage} />
-          <Route path="/explore" component={ExplorePage} />
-          <Route exact path="/:username" component={ProfilePage} />
-          <Route exact path="/p/:postId" component={PostPage} />
-          <Route path="/accounts/edit" component={EditProfilePage} />
-          <Route path="/accounts/login" component={LoginPage} />
-          <Route path="/accounts/emailsignup" component={SignUpPage} />
-          <Route path="*" component={NotFoundPage} />
-        </Switch>
-        {isModalOpen && <Route exact path="/p/:postId" component={PostModal} />}
-      </UserContext.Provider>
-    )
-  }
-  return <LoadingScreen />
+  return (
+    <UserContext.Provider value={{ me, currentUserId, followerIds, followingIds, feedIds }}>
+      <Switch location={isModalOpen ? prevLocation.current : location}>
+        <Route exact path="/" component={FeedPage} />
+        <Route path="/explore" component={ExplorePage} />
+        <Route exact path="/:username" component={ProfilePage} />
+        <Route exact path="/p/:postId" component={PostPage} />
+        <Route path="/accounts/edit" component={EditProfilePage} />
+        <Route path="/accounts/login" component={LoginPage} />
+        <Route path="/accounts/emailsignup" component={SignUpPage} />
+        <Route path="*" component={NotFoundPage} />
+      </Switch>
+      {isModalOpen && <Route exact path="/p/:postId" component={PostModal} />}
+    </UserContext.Provider>
+  )
+  // }
+  // return <LoadingScreen />
 
 
 }
