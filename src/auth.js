@@ -14,6 +14,7 @@ function AuthProvider({ children }) {
     const [createUser] = useMutation(CREATE_USER);
 
 
+
     async function getUser() {
         try {
             const data = await Auth.currentAuthenticatedUser();
@@ -31,7 +32,7 @@ function AuthProvider({ children }) {
                 phoneNumber: "",
                 profileImage: "",
             }
-            createUser({ variables })
+            await createUser({ variables })
             // setAuthState({ status: 'in', user: data });
             console.log(authState)
         } catch (err) {
@@ -45,23 +46,24 @@ function AuthProvider({ children }) {
             if (payload.event === 'signIn') {
                 const credentials = await Auth.currentAuthenticatedUser();
                 console.log('credentials', credentials);
-                if (credentials.username)
+                if (credentials.username) {
                     setAuthState({ status: 'in', user: credentials });
+                }
                 console.log(authState);
 
             }
             if (payload.event === 'signOut') {
-                return setAuthState({ status: 'out' });
+                setAuthState({ status: 'out' });
                 // return setLoading(false);
             }
         });
         getUser();
-    }, []);
+    }, [authState]);
 
-    const loginWithGoogle = async () => {
+    const loginWithSSO = async (provider) => {
         // e.preventDefault();
         try {
-            await Auth.federatedSignIn({ provider: "Google" });
+            await Auth.federatedSignIn({ provider: provider });
         } catch (error) {
             console.error('Error creating user', error);
         }
@@ -75,6 +77,7 @@ function AuthProvider({ children }) {
             console.error('Error creating user', error);
         }
     };
+
     const loginWithAmazon = async () => {
 
     };
@@ -82,7 +85,6 @@ function AuthProvider({ children }) {
     const logInWithEmailAndPassword = async (username, password) => {
         try {
             const data = await Auth.signIn(username, password);
-            // setAuthState({ status: "in", user: data })
             return data;
         } catch (error) {
             console.error('error signing in', error);
@@ -150,7 +152,7 @@ function AuthProvider({ children }) {
                 signUpWithEmailAndPassword,
                 logInWithEmailAndPassword,
                 updateEmail,
-                loginWithGoogle,
+                loginWithSSO,
                 loginWithFacebook,
                 loginWithAmazon,
             }}

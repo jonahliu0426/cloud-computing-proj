@@ -196,14 +196,24 @@ const LoginPage = () => {
 
 export const LoginWithFacebook = ({ color, iconColor, variant }) => {
   const classes = useLoginPageStyles();
-  const { logInWithGoogle } = React.useContext(AuthContext)
+  const { loginWithSSO } = React.useContext(AuthContext)
   const facebookIcon = iconColor === "blue" ? FacebookIconBlue : FacebookIconWhite;
   const [error, setError] = React.useState('')
   const history = useHistory();
 
+  async function handleFacebookLogin() {
+    try {
+      await loginWithSSO('Facebook');
+      // setTimeout(history.push('/'), 100);
+    } catch (error) {
+      console.error('Error logging in with Google', error)
+      setError(error.message)
+    }
+  };
+
   return (
     <>
-      <Button onClick={() => Auth.federatedSignIn({ provider: "Facebook" })} fullWidth color={color}>
+      <Button onClick={handleFacebookLogin} fullWidth color={color}>
         <img
           src={facebookIcon}
           alt="facebook icon"
@@ -217,19 +227,30 @@ export const LoginWithFacebook = ({ color, iconColor, variant }) => {
 }
 
 export const LoginWithGoogle = () => {
-  const { loginWithGoogle } = React.useContext(AuthContext);
+  const { loginWithSSO } = React.useContext(AuthContext);
+  const [error, setError] = React.useState('')
+  const history = useHistory();
 
   function handleGoogleLogin(e) {
-    e.preventDefault();
-    loginWithGoogle(e);
+    try {
+      loginWithSSO('Google');
+      // setTimeout(history.push('/'), 100);
+    } catch (error) {
+      console.error('Error logging in with Google', error)
+      setError(error.message)
+    }
+
   };
 
   return (
-    <Button fullWidth onClick={handleGoogleLogin}>
-      <img src={googleBtn} alt="Google Sign In button"
-        className="googleSignIn"
-        style={{ height: "40px", width: "173px" }} />
-    </Button >
+    <>
+      <Button fullWidth onClick={handleGoogleLogin}>
+        <img src={googleBtn} alt="Google Sign In button"
+          className="googleSignIn"
+          style={{ height: "40px", width: "173px" }} />
+      </Button >
+      <AuthError error={error} />
+    </>
   )
 }
 
