@@ -17,12 +17,12 @@ import React from "react";
 
 const client = new ApolloClient({
     link: new WebSocketLink({
-        uri: "wss://instagram-react-webapp.herokuapp.com/v1/graphql",
+        uri: "wss://cloud-computing-proj.hasura.app/v1/graphql",
         options: {
             reconnect: true,
             connectionParams: {
                 headers: {
-                    'x-hasura-admin-secret': 'jk27882788'
+                    'x-hasura-admin-secret': 'eCMJzr1EWEM3aJRhlP4234nQaqHJ5UtDWeBVZNSLIT8Spq3vMtVB9ygY8PeROIGz'
                 }
             }
         }

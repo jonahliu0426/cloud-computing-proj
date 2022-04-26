@@ -45,9 +45,9 @@ function App() {
     }
   }, [location, modal, history.action]);
 
-  React.useEffect(() => {
-    history.push('/');
-  }, [authState])
+  // React.useEffect(() => {
+  //   history.push('/');
+  // }, [authState])
 
 
   if (loading) return <LoadingScreen />

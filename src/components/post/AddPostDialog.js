@@ -9,6 +9,7 @@ import serialize from '../../utils/serialize';
 import handleImageUpload from '../../utils/handleImageUpload';
 import { useMutation, useQuery } from '@apollo/client';
 import { CREATE_POST } from '../../graphql/mutations';
+import { useHistory } from 'react-router-dom';
 
 
 
@@ -21,6 +22,7 @@ const initialValue = [
 
 
 const AddPostDialog = ({ media, handleClose }) => {
+    const history = useHistory();
     const { me, currentUserId } = React.useContext(UserContext);
     const classes = useAddPostDialogStyles();
     const editor = React.useMemo(() => withReact(createEditor()), []);
@@ -28,6 +30,8 @@ const AddPostDialog = ({ media, handleClose }) => {
     const [location, setLocation] = React.useState('');
     const [isSubmitting, setIsSubmitting] = React.useState(false)
     const [createPost] = useMutation(CREATE_POST);
+
+    console.log(media);
 
     function handleSharePost() {
         setIsSubmitting(true);
@@ -40,7 +44,8 @@ const AddPostDialog = ({ media, handleClose }) => {
                 userId: currentUserId,
                 location,
                 caption: serialize({ children: value }),
-            }
+            },
+            history,
         });
         setIsSubmitting(false);
     }
@@ -76,6 +81,7 @@ const AddPostDialog = ({ media, handleClose }) => {
                     src={URL.createObjectURL(media)}
                     className={classes.avatarLarge}
                     variant="square"
+                    sx={{ width: 80, height: 80 }}
                 />
             </Paper>
             <TextField

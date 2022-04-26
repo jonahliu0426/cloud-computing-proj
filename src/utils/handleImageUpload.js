@@ -1,6 +1,6 @@
 // import { userInfo } from "os";
 
-const handleImageUpload = async ({ user, media, stateFunction, gqlFunction, actionType, postData }) => {
+const handleImageUpload = async ({ user, media, stateFunction, gqlFunction, actionType, postData, history }) => {
     let myHeaders = new Headers();
     let filename = media['name'];
     console.log(filename)
@@ -31,6 +31,7 @@ const handleImageUpload = async ({ user, media, stateFunction, gqlFunction, acti
                     } else if (actionType === 'SHARE_POST') {
                         const variables = { ...postData, media: url };
                         await gqlFunction({ variables });
+                        // history.push('/');
                         window.location.reload();
                     }
                 })

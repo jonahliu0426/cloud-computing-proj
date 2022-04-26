@@ -53,7 +53,7 @@ function FeedPage() {
     <Layout>
       <div className={classes.container}>
         <div>
-          {data.posts.map((post, index) => (
+          {data?.posts.map((post, index) => (
             <React.Suspense key={post.id} fallback={<FeedPostSkeleton />}>
               <FeedPost index={index} post={post} />
             </React.Suspense>
