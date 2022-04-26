@@ -1,9 +1,6 @@
 import { ApolloClient, gql, InMemoryCache } from "@apollo/client";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { createClient } from "graphql-ws";
-import { WebSocketLink } from "apollo-link-ws";
-import { AuthContext } from "../auth";
-import React from "react";
 
 // const isIn = authState.status === "in";
 
@@ -14,19 +11,30 @@ import React from "react";
 //     headers
 // });
 
-
-const client = new ApolloClient({
-    link: new WebSocketLink({
-        uri: "wss://cloud-computing-proj.hasura.app/v1/graphql",
-        options: {
-            reconnect: true,
-            connectionParams: {
-                headers: {
-                    'x-hasura-admin-secret': 'eCMJzr1EWEM3aJRhlP4234nQaqHJ5UtDWeBVZNSLIT8Spq3vMtVB9ygY8PeROIGz'
-                }
+const link = new GraphQLWsLink(
+    createClient({
+        url: "wss://cloud-computing-proj.hasura.app/v1/graphql",
+        connectionParams: {
+            headers: {
+                'x-hasura-admin-secret': 'eCMJzr1EWEM3aJRhlP4234nQaqHJ5UtDWeBVZNSLIT8Spq3vMtVB9ygY8PeROIGz'
             }
         }
     }),
+);
+
+const client = new ApolloClient({
+    link: link,
+    //     new WebSocketLink({
+    //     uri: "wss://cloud-computing-proj.hasura.app/v1/graphql",
+    //     options: {
+    //         reconnect: true,
+    //         connectionParams: {
+    //             headers: {
+    //                 'x-hasura-admin-secret': 'eCMJzr1EWEM3aJRhlP4234nQaqHJ5UtDWeBVZNSLIT8Spq3vMtVB9ygY8PeROIGz'
+    //             }
+    //         }
+    //     }
+    // }),
     cache: new InMemoryCache(),
 });
 

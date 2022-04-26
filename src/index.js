@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { MuiThemeProvider, CssBaseline, Typography } from "@material-ui/core";
 import theme from "./theme";
 import App from "./App";
@@ -41,7 +42,11 @@ class ErrorBoundary extends React.Component {
     return this.props.children;
   }
 }
-ReactDOM.render(
+
+const rootElement = document.getElementById('root');
+const root = createRoot(rootElement);
+
+root.render(
   <ErrorBoundary>
     <ApolloProvider client={client}>
       <AuthProvider>
@@ -53,6 +58,5 @@ ReactDOM.render(
         </MuiThemeProvider>
       </AuthProvider>
     </ApolloProvider>
-  </ErrorBoundary>,
-  document.getElementById("root")
+  </ErrorBoundary>
 );
