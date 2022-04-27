@@ -40,7 +40,7 @@ function ProfilePicture({
       {image ? (
         <div className={classes.wrapper}
           onClick={isOwner ? openFileInput : () => null}>
-          <img src={img} alt="user profile" className={classes.image} />
+          <img src={user.profile_image} alt="user profile" className={classes.image} />
         </div>
       ) : (
         <div className={classes.wrapper}>
