@@ -3,7 +3,7 @@ import { createEditor } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react';
 import { makeStyles, Toolbar, Typography, Dialog, AppBar, Button, Divider, Avatar, Paper, TextField, InputAdornment } from "@material-ui/core";
 import { useAddPostDialogStyles } from '../../styles';
-import { ArrowBackIos, PinDrop } from '@material-ui/icons';
+import { ArrowBackIos, PinDrop, Label } from '@material-ui/icons';
 import { UserContext } from '../../App';
 import serialize from '../../utils/serialize';
 import handleImageUpload from '../../utils/handleImageUpload';
@@ -22,7 +22,6 @@ const initialValue = [
 
 
 const AddPostDialog = ({ media, handleClose }) => {
-    const history = useHistory();
     const { me, currentUserId } = React.useContext(UserContext);
     const classes = useAddPostDialogStyles();
     const editor = React.useMemo(() => withReact(createEditor()), []);
@@ -30,6 +29,8 @@ const AddPostDialog = ({ media, handleClose }) => {
     const [location, setLocation] = React.useState('');
     const [isSubmitting, setIsSubmitting] = React.useState(false)
     const [createPost] = useMutation(CREATE_POST);
+    const [labels, setLabels] = React.useState([]);
+    const [labelInput, setLabelInput] = React.useState('');
 
     console.log(media);
 
@@ -45,9 +46,26 @@ const AddPostDialog = ({ media, handleClose }) => {
                 location,
                 caption: serialize({ children: value }),
             },
-            history,
+            labels,
         });
         setIsSubmitting(false);
+    }
+
+    const handleAddLabel = (event) => {
+        if (!labelInput.trim()) return;
+        setLabels(prevLabels => {
+            return [
+                ...labels,
+                labelInput.toLowerCase().trim()
+            ]
+        });
+        setLabelInput('')
+    }
+
+    const handleDeleteLabel = (index) => {
+        setLabels(prevLabels => {
+            return prevLabels.filter((label, i) => i !== index)
+        })
     }
 
     return (
@@ -101,6 +119,37 @@ const AddPostDialog = ({ media, handleClose }) => {
                 }}
                 onChange={event => setLocation(event.target.value)}
             />
+            <TextField
+                fullWidth
+                placeholder="Label"
+                value={labelInput}
+                InputProps={{
+                    classes: {
+                        root: classes.root,
+                        input: classes.input,
+                        underline: classes.underline,
+                    },
+                    startAdornment: (
+                        <InputAdornment>
+                            <Label />
+                        </InputAdornment>
+                    ),
+                    endAdornment: (
+                        <InputAdornment>
+                            <Button variant="outlined" color="success" onClick={handleAddLabel}>
+                                Add
+                            </Button>
+                        </InputAdornment>
+                    ),
+                }}
+                onChange={(event) => setLabelInput(event.target.value)}
+            />
+            {labels && <div className={classes.labelWrapper}>{labels && (
+                labels.map((label, i) => (
+                    <Button key={i} className={classes.label} onClick={() => handleDeleteLabel(i)}>{label}&nbsp;&nbsp;</Button>
+
+                ))
+            )}</div>}
         </Dialog>
     )
 }

@@ -2,6 +2,7 @@ import React from "react";
 import { Switch, Route, Redirect, useHistory, useLocation } from "react-router-dom"
 import FeedPage from "./pages/feed"
 import ExplorePage from "./pages/explore"
+import SearchPage from "./pages/search"
 import ProfilePage from "./pages/profile"
 import PostPage from "./pages/post"
 import EditProfilePage from "./pages/edit-profile";
@@ -76,6 +77,7 @@ function App() {
         <Switch location={isModalOpen ? prevLocation.current : location}>
           <Route exact path="/" component={FeedPage} />
           <Route path="/explore" component={ExplorePage} />
+          <Route path="/search/:query" component={SearchPage} />
           <Route exact path="/:username" component={ProfilePage} />
           <Route exact path="/p/:postId" component={PostPage} />
           <Route path="/accounts/edit" component={EditProfilePage} />

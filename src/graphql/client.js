@@ -24,17 +24,6 @@ const link = new GraphQLWsLink(
 
 const client = new ApolloClient({
     link: link,
-    //     new WebSocketLink({
-    //     uri: "wss://cloud-computing-proj.hasura.app/v1/graphql",
-    //     options: {
-    //         reconnect: true,
-    //         connectionParams: {
-    //             headers: {
-    //                 'x-hasura-admin-secret': 'eCMJzr1EWEM3aJRhlP4234nQaqHJ5UtDWeBVZNSLIT8Spq3vMtVB9ygY8PeROIGz'
-    //             }
-    //         }
-    //     }
-    // }),
     cache: new InMemoryCache(),
 });
 

@@ -234,3 +234,30 @@ export const GET_FEED = gql`
     }
   }
 `;
+
+
+export const SEARCH_POSTS = gql`
+query searchPosts($feedURLs: [String!]!) {
+  posts(
+    order_by: {
+      created_at: desc, 
+      likes_aggregate: {count: desc}, 
+      comments_aggregate: {count: desc}
+    }
+    where: {media: {_in: $feedURLs}}
+    ) {
+    id
+    media
+    likes_aggregate {
+      aggregate {
+        count
+      }
+    }
+    comments_aggregate {
+      aggregate {
+        count
+      }
+    }
+  }
+}
+`

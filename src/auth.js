@@ -181,7 +181,7 @@ function AuthProvider({ children }) {
     };
 
     const updateEmail = async (email) => {
-        await authState.user.updateEmail(email);
+        await Auth.updateUserAttributes(authState.user, { email });
     }
 
     // if (authState.status === "loading") {

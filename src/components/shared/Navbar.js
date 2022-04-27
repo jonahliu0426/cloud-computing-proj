@@ -1,4 +1,4 @@
-import { AppBar, Avatar, Fade, Grid, Hidden, InputBase, Typography, Zoom } from "@material-ui/core";
+import { AppBar, Avatar, Fade, Grid, Hidden, InputBase, TextField, Typography, Zoom } from "@material-ui/core";
 import React from "react";
 import { useNavbarStyles, WhiteTooltip, RedTooltip } from "../../styles";
 import { Link, useHistory } from 'react-router-dom';
@@ -65,7 +65,7 @@ const Search = ({ history }) => {
   const [query, setQuery] = React.useState('');
   const [searchUsers, { data }] = useLazyQuery(SEARCH_USERS)
 
-  const hasResults = Boolean(query) && results.length > 0;
+  const hasResults = Boolean(query) && results.length >= 0;
 
   React.useEffect(() => {
     if (!query.trim()) return;
@@ -82,6 +82,14 @@ const Search = ({ history }) => {
     setQuery('');
   }
 
+  async function handleLabelSearch() {
+    try {
+      history.push(`/search/${query}`);
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   return (
     <Hidden xsDown>
       <WhiteTooltip
@@ -92,6 +100,14 @@ const Search = ({ history }) => {
         title={
           hasResults && (
             <Grid className={classes.resultContainer} container>
+              <Grid className={classes.resultLink}
+                onClick={handleLabelSearch}
+              >
+                <Typography variant="body1" color="textSecondary" >#Search Photos</Typography>
+              </Grid>
+              <Grid className={classes.resultLink}>
+                <Typography variant="body1" color="textSecondary">User Results: </Typography>
+              </Grid>
               {results.map(result => (
                 <Grid key={result.id} item className={classes.resultLink}
                   onClick={() => {
