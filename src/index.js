@@ -11,7 +11,8 @@ import AuthProvider from "./auth";
 import Amplify, { Auth, API } from 'aws-amplify';
 import awsmobile from './aws-exports';
 
-window.LOG_LEVEL = 'DEBUG';
+
+// window.LOG_LEVEL = 'DEBUG';
 
 
 export const UserContext = React.createContext();
@@ -42,6 +43,25 @@ class ErrorBoundary extends React.Component {
     return this.props.children;
   }
 }
+
+
+
+
+// ReactDOM.render(
+//   // <ErrorBoundary>
+//   <ApolloProvider client={client}>
+//     <AuthProvider>
+//       <MuiThemeProvider theme={theme}>
+//         <CssBaseline />
+//         <Router>
+//           <App />
+//         </Router>
+//       </MuiThemeProvider>
+//     </AuthProvider>
+//   </ApolloProvider>,
+//   // </ErrorBoundary>,
+//   document.getElementById('root')
+// )
 
 const rootElement = document.getElementById('root');
 const root = createRoot(rootElement);

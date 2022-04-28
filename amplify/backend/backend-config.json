@@ -50,5 +50,12 @@
         }
       }
     }
+  },
+  "predictions": {
+    "CloudComputingProjTranscribe": {
+      "providerPlugin": "awscloudformation",
+      "service": "Transcribe",
+      "convertType": "transcription"
+    }
   }
 }

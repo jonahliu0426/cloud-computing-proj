@@ -173,8 +173,8 @@ const Comment = ({ postId }) => {
         value={content}
         placeholder="Add a comment"
         multiline
-        rowsMax={2}
-        rows={1}
+        maxRows={2}
+        minRows={1}
         className={classes.textField}
         onChange={event => setContent(event.target.value)}
         InputProps={{

@@ -237,7 +237,7 @@ export const useNavbarStyles = makeStyles(theme => ({
     objectFit: "contain"
   },
   input: {
-    height: 28,
+    height: 35,
     fontSize: "14px !important",
     background: "rgba(var(--b3f,250,250,250),1)",
     border: "solid 1px rgba(var(--b6a,219,219,219),1)",
@@ -294,7 +294,8 @@ export const useNavbarStyles = makeStyles(theme => ({
     backgroundPosition: "-250px -98px",
     height: 20,
     width: 20,
-    cursor: "pointer"
+    cursor: "pointer",
+    paddingRight: 15
   },
   searchIcon: {
     backgroundImage: `url(${IconSheet})`,
