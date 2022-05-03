@@ -2,7 +2,7 @@ interface Options {
     isPreventDefault?: boolean;
     delay?: number;
 }
-declare const useLongPress: (callback: (e: MouseEvent | TouchEvent) => void, { isPreventDefault, delay }?: Options) => {
+declare const useLongPress: (callback: (e: TouchEvent | MouseEvent) => void, { isPreventDefault, delay }?: Options) => {
     readonly onMouseDown: (e: any) => void;
     readonly onTouchStart: (e: any) => void;
     readonly onMouseUp: () => void;

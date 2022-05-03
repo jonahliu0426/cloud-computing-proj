@@ -2,6 +2,12 @@ import React from 'react';
 import { RegisterOptions } from './validator';
 import { Control, FieldError, FieldPath, FieldPathValue, FieldValues, Noop, RefCallBack, UnpackNestedValue, UseFormStateReturn } from './';
 export declare type ControllerFieldState = {
+    /**
+     * @deprecated check `fieldState.error` instead
+     * ```jsx
+     * {fieldState.error && <p>{fieldState.error.message}</p>}
+     * ```
+     */
     invalid: boolean;
     isTouched: boolean;
     isDirty: boolean;

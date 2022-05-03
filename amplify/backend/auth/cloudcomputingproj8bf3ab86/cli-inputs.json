@@ -2,7 +2,7 @@
   "version": "1",
   "cognitoConfig": {
     "identityPoolName": "cloudcomputingproj8bf3ab86_identitypool_8bf3ab86",
-    "allowUnauthenticatedIdentities": false,
+    "allowUnauthenticatedIdentities": true,
     "resourceNameTruncated": "cloudc8bf3ab86",
     "userPoolName": "cloudcomputingproj8bf3ab86_userpool_8bf3ab86",
     "autoVerifiedAttributes": [

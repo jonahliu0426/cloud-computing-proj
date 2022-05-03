@@ -18,5 +18,11 @@ export type AmplifyDependentResourcesAttributes = {
             "GraphQLAPIIdOutput": "string",
             "GraphQLAPIEndpointOutput": "string"
         }
+    },
+    "predictions": {
+        "CloudComputingProjTranscribe": {
+            "region": "string",
+            "language": "string"
+        }
     }
 }
