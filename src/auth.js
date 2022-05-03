@@ -72,10 +72,10 @@ function AuthProvider({ children }) {
                 return setAuthState({ status: 'out' });
             }
             if (payload.event === 'signUp') {
-                const userData = JSON.parse(localStorage.getItem("CognitoIdentityServiceProvider.e3eishgg0qteefuf10h8so10c.google_106266713809979300572.userData"));
-                const userId = userData["Username"];
-                console.log('localstorage', localStorage.getItem("CognitoIdentityServiceProvider.e3eishgg0qteefuf10h8so10c.google_106266713809979300572.userData"))
-                console.log(userId);
+                const userId = localStorage.getItem("CognitoIdentityServiceProvider.60200e4b4kuej11fpot3le2703.LastAuthUser")
+                const userData = JSON.parse(localStorage.getItem(`CognitoIdentityServiceProvider.e3eishgg0qteefuf10h8so10c.${userId}.userData`));
+                console.log('localstorage', localStorage.getItem(`CognitoIdentityServiceProvider.e3eishgg0qteefuf10h8so10c.${userId}.userData`))
+                // console.log(userId);
 
                 // console.log('create user started,', data);
                 const email = userData.UserAttributes[3]["Value"]
