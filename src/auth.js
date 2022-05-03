@@ -72,7 +72,7 @@ function AuthProvider({ children }) {
                 return setAuthState({ status: 'out' });
             }
             if (payload.event === 'signUp') {
-                const userId = localStorage.getItem("CognitoIdentityServiceProvider.60200e4b4kuej11fpot3le2703.LastAuthUser")
+                const userId = localStorage.getItem("CognitoIdentityServiceProvider.e3eishgg0qteefuf10h8so10c.LastAuthUser")
                 const userData = JSON.parse(localStorage.getItem(`CognitoIdentityServiceProvider.e3eishgg0qteefuf10h8so10c.${userId}.userData`));
                 console.log('localstorage', localStorage.getItem(`CognitoIdentityServiceProvider.e3eishgg0qteefuf10h8so10c.${userId}.userData`))
                 // console.log(userId);
