@@ -186,7 +186,7 @@ const Links = ({ path }) => {
   // console.log('new notifications', notificationsToShow);
   const hasNotifications = newNotifications.length > 0;
   const classes = useNavbarStyles();
-  const [showList, setShowList] = React.useState(true);
+  const [showList, setShowList] = React.useState(false);
   const [showTooltip, setShowTooltip] = React.useState(hasNotifications);
   const [media, setMedia] = React.useState(null);
   const [showAddPostDialog, setShowAddPostDialog] = React.useState(false);
