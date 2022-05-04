@@ -1,4 +1,4 @@
-import { AppBar, Avatar, Fade, Grid, Hidden, InputBase, TextField, Typography, Zoom } from "@material-ui/core";
+import { AppBar, Avatar, Fade, Grid, Hidden, Button, InputBase, Typography, CircularProgress, Zoom } from "@material-ui/core";
 import React from "react";
 import { useNavbarStyles, WhiteTooltip, RedTooltip } from "../../styles";
 import { Link, useHistory } from 'react-router-dom';
@@ -7,12 +7,12 @@ import { AddIcon, ExploreActiveIcon, ExploreIcon, HomeActiveIcon, HomeIcon, Like
 import NotificationTooltip from '../notification/NotificationTooltip';
 import NotificationList from "../notification/NotificationList";
 import { useNProgress } from "@tanem/react-nprogress";
-import { AuthContext } from "../../auth";
 import { SEARCH_USERS } from "../../graphql/queries";
 import { useLazyQuery } from "@apollo/client";
 import { UserContext } from "../../App";
 import AddPostDialog from "../post/AddPostDialog";
 import { isAfter } from "date-fns";
+import SpeechToText from "../../utils/transcribe";
 
 
 
@@ -63,7 +63,8 @@ const Search = ({ history }) => {
   const [loading, setLoading] = React.useState(false);
   const [results, setResults] = React.useState([])
   const [query, setQuery] = React.useState('');
-  const [searchUsers, { data }] = useLazyQuery(SEARCH_USERS)
+  const [searchUsers, { data }] = useLazyQuery(SEARCH_USERS);
+  const [audioConverting, setAudioConverting] = React.useState(false);
 
   const hasResults = Boolean(query) && results.length >= 0;
 
@@ -136,10 +137,31 @@ const Search = ({ history }) => {
           startAdornment={<span className={classes.searchIcon} />}
           endAdornment={
             loading ? (
-              <LoadingIcon />
-            ) : (
-              <span onClick={handleClearInput} className={classes.clearIcon} />
-            )
+              <>
+                <span onClick={handleClearInput} className={classes.clearIcon} />
+                <Button
+                  variant="outlined"
+                  style={{ border: 0, padding: "6px 12px" }}
+                >
+                  <LoadingIcon />
+                </Button>
+
+              </>
+            ) :
+              audioConverting ? (
+                <Button
+                  variant="outlined"
+                  style={{ border: 0, padding: "6px 12px" }}
+                >
+                  <span onClick={handleClearInput} className={classes.clearIcon} />
+                  <CircularProgress color="secondary" size="1rem" />
+                </Button>
+              ) : (
+                <>
+                  <span onClick={handleClearInput} className={classes.clearIcon} />
+                  <SpeechToText setAudioConverting={setAudioConverting} setQuery={setQuery} query={query} />
+                </>
+              )
           }
           value={query}
           placeholder="Search"
@@ -171,8 +193,10 @@ const Links = ({ path }) => {
   const inputRef = React.useRef();
   console.log(me);
 
-  const handleToggleList = () => {
-    setShowList((prev) => !prev);
+  function handleToggleList() {
+    setTimeout(() => {
+      setShowList(!showList);
+    }, 0);
   }
 
   React.useEffect(() => {
@@ -245,8 +269,8 @@ const Links = ({ path }) => {
             className={classes.profileImage}
           />
         </Link>
-      </div>
-    </div>
+      </div >
+    </div >
   )
 }
 

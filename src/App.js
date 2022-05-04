@@ -17,6 +17,7 @@ import { ME } from "./graphql/subscriptions";
 import LoadingScreen from "./components/shared/LoadingScreen";
 import Amplify, { Auth, Hub } from 'aws-amplify';
 import awsconfig from './aws-exports';
+
 // Auth.configure(awsconfig);
 
 export const UserContext = React.createContext();
@@ -39,6 +40,7 @@ function App() {
 
 
   console.log('auth', authState)
+
 
   React.useEffect(() => {
     if (history.action !== 'POP' && !modal) {

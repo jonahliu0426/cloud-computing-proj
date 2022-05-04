@@ -243,6 +243,12 @@ export declare type UseFormGetValues<TFieldValues extends FieldValues> = {
  * ```
  */
 export declare type UseFormGetFieldState<TFieldValues extends FieldValues> = <TFieldName extends FieldPath<TFieldValues>>(name: TFieldName, formState?: FormState<TFieldValues>) => {
+    /**
+     * @deprecated check `fieldState.error` instead
+     * ```jsx
+     * {fieldState.error && <p>{fieldState.error.message}</p>}
+     * ```
+     */
     invalid: boolean;
     isDirty: boolean;
     isTouched: boolean;
