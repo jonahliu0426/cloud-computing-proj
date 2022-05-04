@@ -20,7 +20,6 @@ function EditProfilePage({ history }) {
   const { currentUserId } = React.useContext(UserContext);
   const variables = { id: currentUserId }
   const { data, loading } = useQuery(GET_EDIT_USER_PROFILE, { variables });
-  console.log('new user profile', data);
   const classes = useEditProfilePageStyles();
   const [showDrawer, setDrawer] = React.useState(false);
   const path = history.location.pathname;
@@ -136,14 +135,13 @@ const DEFAULT_ERROR = { type: "", message: "" }
 
 const EditUserInfo = ({ user }) => {
   const { updateEmail } = React.useContext(AuthContext);
-  const { me } = React.useContext(UserContext);
   const { register, handleSubmit } = useForm({ mode: 'onBlur' });
   const classes = useEditProfilePageStyles();
   const [editUser] = useMutation(EDIT_USER);
   const [error, setError] = React.useState(DEFAULT_ERROR);
   const [open, setOpen] = React.useState(false);
   // const [media, setMedia] = React.useState(null);
-  const [profileImage, setProfileImage] = React.useState(me.profile_image);
+  const [profileImage, setProfileImage] = React.useState(user.profile_image);
   const [editUserAvatar] = useMutation(EDIT_USER_AVATAR)
   const inputRef = React.useRef();
   console.log(user);
@@ -181,8 +179,6 @@ const EditUserInfo = ({ user }) => {
       gqlFunction: editUserAvatar,
       actionType: 'UPLOAD_AVATAR'
     });
-    setProfileImage(me.profile_image);
-    // console.log('set profile image,', user.profile_image)
   }
 
   const openFileInput = () => {
@@ -192,7 +188,7 @@ const EditUserInfo = ({ user }) => {
   return (
     <section className={classes.container}>
       <div className={classes.pictureSectionItem}>
-        <ProfilePicture user={me} size={45} image={profileImage} />
+        <ProfilePicture size={45} image={profileImage} />
         <div className={classes.justifySelfStart}>
           <Typography className={classes.typography}>
             {user.username}
@@ -261,8 +257,8 @@ const EditUserInfo = ({ user }) => {
             variant="outlined"
             multiline
             fullWidth
-            rowsMax={3}
-            rows={3}
+            maxRows={3}
+            minRows={1}
             defaultValue={user.bio}
           />
         </div>

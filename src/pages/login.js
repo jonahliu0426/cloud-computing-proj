@@ -169,8 +169,7 @@ const LoginPage = () => {
             </div>
             <LoginWithGoogle />
             <LoginWithFacebook color="secondary" iconColor="blue" />
-            <LoginWithAmazon />
-            {/* <LoginWithFacebook /> */}
+
             <AuthError error={error} />
             <Button fullWidth color="secondary">
               <Typography variant="caption">

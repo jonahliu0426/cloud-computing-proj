@@ -1,4 +1,17 @@
 {
+  "philis": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-cloudcomputingproj-philis-02850-authRole",
+      "UnauthRoleArn": "arn:aws:iam::257603592192:role/amplify-cloudcomputingproj-philis-02850-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::257603592192:role/amplify-cloudcomputingproj-philis-02850-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-cloudcomputingproj-philis-02850-deployment",
+      "UnauthRoleName": "amplify-cloudcomputingproj-philis-02850-unauthRole",
+      "StackName": "amplify-cloudcomputingproj-philis-02850",
+      "StackId": "arn:aws:cloudformation:us-east-1:257603592192:stack/amplify-cloudcomputingproj-philis-02850/57d25d60-c753-11ec-9ea6-0e3807434699",
+      "AmplifyAppId": "d1vky7rnexu0gr"
+    }
+  },
   "dev": {
     "awscloudformation": {
       "AuthRoleName": "amplify-cloudcomputingproj-dev-204725-authRole",
@@ -10,11 +23,6 @@
       "StackName": "amplify-cloudcomputingproj-dev-204725",
       "StackId": "arn:aws:cloudformation:us-east-1:257603592192:stack/amplify-cloudcomputingproj-dev-204725/f2a406e0-c29e-11ec-b9bd-125be11a2f29",
       "AmplifyAppId": "d1vky7rnexu0gr"
-    },
-    "categories": {
-      "auth": {
-        "cloudcomputingproj8bf3ab86": {}
-      }
     }
   }
 }

@@ -17,13 +17,14 @@ import { ME } from "./graphql/subscriptions";
 import LoadingScreen from "./components/shared/LoadingScreen";
 import Amplify, { Auth, Hub } from 'aws-amplify';
 import awsconfig from './aws-exports';
+
 // Auth.configure(awsconfig);
 
 export const UserContext = React.createContext();
 
 
 function App() {
-  const { authState } = React.useContext(AuthContext);
+  const { authState, getUser } = React.useContext(AuthContext);
   const isAuth = authState.status === "in";
   const userId = isAuth ? authState.user.username : null;
   console.log('userId', userId);
@@ -40,15 +41,16 @@ function App() {
 
   console.log('auth', authState)
 
+
   React.useEffect(() => {
     if (history.action !== 'POP' && !modal) {
       prevLocation.current = location;
     }
   }, [location, modal, history.action]);
 
-  // React.useEffect(() => {
-  //   history.push('/');
-  // }, [authState])
+  React.useEffect(() => {
+    getUser();
+  }, [])
 
 
   if (loading) return <LoadingScreen />
