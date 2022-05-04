@@ -94,19 +94,12 @@ function AuthProvider({ children }) {
             // const credentials = Auth.currentAuthenticatedUser();
 
 
+
         } catch (error) {
             console.error('Error creating user', error);
         }
 
     }
-
-    const loginWithFacebook = async () => {
-        try {
-            await Auth.federatedSignIn({ provider: "Facebook" });
-        } catch (error) {
-            console.error('Error creating user', error);
-        }
-    };
 
 
     const logInWithEmailAndPassword = async (username, password) => {
@@ -178,7 +171,6 @@ function AuthProvider({ children }) {
                 logInWithEmailAndPassword,
                 updateEmail,
                 loginWithSSO,
-                loginWithFacebook
             }}
         >
             {children}
