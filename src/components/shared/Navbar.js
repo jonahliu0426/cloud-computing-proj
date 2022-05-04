@@ -1,4 +1,4 @@
-import { AppBar, Avatar, Fade, Grid, Hidden, Button, InputBase, TextField, Typography, Zoom, CircularProgress } from "@material-ui/core";
+import { AppBar, Avatar, Fade, Grid, Hidden, Button, InputBase, Typography, CircularProgress, Zoom } from "@material-ui/core";
 import React from "react";
 import { useNavbarStyles, WhiteTooltip, RedTooltip } from "../../styles";
 import { Link, useHistory } from 'react-router-dom';
@@ -7,7 +7,6 @@ import { AddIcon, ExploreActiveIcon, ExploreIcon, HomeActiveIcon, HomeIcon, Like
 import NotificationTooltip from '../notification/NotificationTooltip';
 import NotificationList from "../notification/NotificationList";
 import { useNProgress } from "@tanem/react-nprogress";
-import { AuthContext } from "../../auth";
 import { SEARCH_USERS } from "../../graphql/queries";
 import { useLazyQuery } from "@apollo/client";
 import { UserContext } from "../../App";
@@ -194,10 +193,10 @@ const Links = ({ path }) => {
   const inputRef = React.useRef();
   console.log(me);
 
-  const handleToggleList = () => {
-    console.log(showList)
-    setShowList((prev) => !prev);
-    console.log(showList)
+  function handleToggleList() {
+    setTimeout(() => {
+      setShowList(!showList);
+    }, 0);
   }
 
   React.useEffect(() => {
@@ -270,8 +269,8 @@ const Links = ({ path }) => {
             className={classes.profileImage}
           />
         </Link>
-      </div>
-    </div>
+      </div >
+    </div >
   )
 }
 
