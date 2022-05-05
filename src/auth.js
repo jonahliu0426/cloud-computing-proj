@@ -5,6 +5,7 @@ import defaultUserImage from "./images/default-user-image.jpg";
 import { Auth, Hub } from 'aws-amplify';
 import { useHistory } from "react-router-dom";
 import { GET_USER_ID } from "./graphql/queries";
+import useCheckUsername from "./utils/checkUsername";
 
 const initialState = {
 
@@ -15,33 +16,7 @@ export const AuthContext = React.createContext()
 function AuthProvider({ children }) {
     const [authState, setAuthState] = React.useState({ status: "loading" });
     const [createUser] = useMutation(CREATE_USER);
-    // const userData = JSON.parse(localStorage.getItem("CognitoIdentityServiceProvider.e3eishgg0qteefuf10h8so10c.google_106266713809979300572.userData"));
-    // const userId = userData["Username"];
-    // console.log('localstorage', localStorage.getItem("CognitoIdentityServiceProvider.e3eishgg0qteefuf10h8so10c.google_106266713809979300572.userData"))
-    // console.log(userId);
-    // const variables = {
-    //     userId
-    // }
-    // const { data, loading } = useQuery(GET_USER_ID, { variables });
-    // if (userId && !data) {
-    //     console.log('create user started,', data);
-    //     const email = userData.UserAttributes[3]["Value"]
-    //     const name = email.split('@')[0]
-    //     const username = `${name}${userId.slice(-5)}`;
-    //     const variables = {
-    //         userId: userId,
-    //         name: username,
-    //         username,
-    //         email,
-    //         bio: "",
-    //         website: "",
-    //         phoneNumber: "",
-    //         profileImage: "",
-    //     }
-    //     console.log('before')
-    //     createUser({ variables })
-    //     console.log('created')
-    // }
+    const [error, setError] = React.useState('');
 
 
     async function getUser() {
@@ -56,57 +31,79 @@ function AuthProvider({ children }) {
         }
     }
 
+    async function putUser() {
+        try {
+            const userId = localStorage.getItem("CognitoIdentityServiceProvider.e3eishgg0qteefuf10h8so10c.LastAuthUser")
+            const userData = JSON.parse(localStorage.getItem(`CognitoIdentityServiceProvider.e3eishgg0qteefuf10h8so10c.${userId}.userData`));
+            console.log('localstorage', localStorage.getItem(`CognitoIdentityServiceProvider.e3eishgg0qteefuf10h8so10c.${userId}.userData`));
+            const email = userData.UserAttributes[3]["Value"]
+            const name = email.split('@')[0]
+            const username = `${name}${userId.slice(-5)}`;
+            const variables = {
+                userId: userId,
+                name: username,
+                username,
+                email,
+                bio: "",
+                website: "",
+                phoneNumber: "",
+                profileImage: "",
+            }
+            console.log('before')
+            await createUser({ variables })
+            console.log('created')
+        } catch (e) {
+            console.log(e);
+        }
+
+    }
+
     React.useEffect(() => {
         Hub.listen('auth', async ({ payload }) => {
             console.log(payload)
+            if (payload.event === 'signUp') {
+                putUser();
+            }
             if (payload.event === 'signIn') {
                 const credentials = await Auth.currentAuthenticatedUser();
                 console.log('credentials', credentials);
-                // if (credentials.username) {
+                const socialProviderLists = ['google', 'facebook'];
+                for (let i = 0; i < socialProviderLists.length; i++) {
+                    if (credentials['username'].indexOf(socialProviderLists[i]) !== -1) {
+                        try {
+                            await putUser();
+                        } catch (e) {
+                            console.log(e);
+                        }
+                    }
+                }
                 setAuthState({ status: 'in', user: credentials });
-                // }
                 console.log(authState);
 
             }
+            if (payload.event === 'signIn_failure') {
+                setError(payload.data.message);
+                return;
+            };
+            if (payload.event === 'signUp_failure') {
+                setError(payload.data.message);
+                return;
+            }
             if (payload.event === 'signOut') {
                 return setAuthState({ status: 'out' });
-            }
-            if (payload.event === 'signUp') {
-                const userData = JSON.parse(localStorage.getItem("CognitoIdentityServiceProvider.e3eishgg0qteefuf10h8so10c.google_106266713809979300572.userData"));
-                const userId = userData["Username"];
-                console.log('localstorage', localStorage.getItem("CognitoIdentityServiceProvider.e3eishgg0qteefuf10h8so10c.google_106266713809979300572.userData"))
-                console.log(userId);
-
-                // console.log('create user started,', data);
-                const email = userData.UserAttributes[3]["Value"]
-                const name = email.split('@')[0]
-                const username = `${name}${userId.slice(-5)}`;
-                const variables = {
-                    userId: userId,
-                    name: username,
-                    username,
-                    email,
-                    bio: "",
-                    website: "",
-                    phoneNumber: "",
-                    profileImage: "",
-                }
-                console.log('before')
-                createUser({ variables })
-                console.log('created')
-
-            }
-            console.log('payload, ', payload);
+            };
+            console.log('here');
             getUser();
-        });
-        console.log('here');
-        getUser();
+        })
     }, []);
 
     const loginWithSSO = async (provider) => {
         // e.preventDefault();
         try {
             await Auth.federatedSignIn({ provider: provider });
+            // const credentials = Auth.currentAuthenticatedUser();
+
+
 
         } catch (error) {
             console.error('Error creating user', error);
@@ -114,17 +111,6 @@ function AuthProvider({ children }) {
 
     }
 
-    const loginWithFacebook = async () => {
-        try {
-            await Auth.federatedSignIn({ provider: "Facebook" });
-        } catch (error) {
-            console.error('Error creating user', error);
-        }
-    };
-
-    const loginWithAmazon = async () => {
-
-    };
 
     const logInWithEmailAndPassword = async (username, password) => {
         try {
@@ -137,7 +123,6 @@ function AuthProvider({ children }) {
 
     const signUpWithEmailAndPassword = async (formData) => {
         try {
-            // const data = await firebase.auth().createUserWithEmailAndPassword(formData.email, formData.password);
             const username = formData.email;
             const password = formData.password;
             const data = await Auth.signUp({
@@ -146,7 +131,6 @@ function AuthProvider({ children }) {
                 attributes: {
                     email: formData.email,          // optional
                     phone_number: formData.phoneNumber,   // optional - E.164 number convention
-                    // other custom attributes 
                 }
             });
             console.log(data);
@@ -197,8 +181,8 @@ function AuthProvider({ children }) {
                 logInWithEmailAndPassword,
                 updateEmail,
                 loginWithSSO,
-                loginWithFacebook,
-                loginWithAmazon,
+                getUser,
+                error,
             }}
         >
             {children}
