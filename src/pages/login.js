@@ -33,10 +33,10 @@ const LoginPage = () => {
   const classes = useLoginPageStyles();
   const [showPassword, setShowPassword] = React.useState(false);
   const hasPassword = Boolean(watch("password"))
-  const { logInWithEmailAndPassword } = React.useContext(AuthContext);
+  const { logInWithEmailAndPassword, error } = React.useContext(AuthContext);
   const history = useHistory();
   const client = useApolloClient()
-  const [error, setError] = React.useState('')
+  // const [error, setError] = React.useState('')
   console.log()
 
   const handleClickShowPassword = (event) => {
@@ -56,13 +56,13 @@ const LoginPage = () => {
 
   const handleError = (error) => {
     if (error.code.includes("auth")) {
-      setError(error.message);
+      // setError(error.message);
     }
   }
 
   async function onSubmit({ input, password }) {
     try {
-      setError("");
+      // setError("");
       if (!isEmail(input)) {
         input = await getUserEmail(input);
       }
@@ -71,7 +71,7 @@ const LoginPage = () => {
       setTimeout(() => history.push("/"), 0);
     } catch (error) {
       console.error("Error logging in", error);
-      handleError(error);
+      // handleError(error);
     }
   }
   // const handleMouseDownPassword = () => setShowPassword(!showPassword)

@@ -20,32 +20,33 @@ import isEmail from "validator/lib/isEmail";
 import { CHECK_IF_USERNAME_TAKEN } from "../graphql/queries";
 import { useApolloClient } from "@apollo/client";
 import { useForm } from "react-hook-form";
+import useCheckUsername from "../utils/checkUsername";
 
 
 
 function SignUpPage() {
   const client = useApolloClient();
   const classes = useSignUpPageStyles();
-  const { signUpWithEmailAndPassword } = React.useContext(AuthContext);
+  const { signUpWithEmailAndPassword, error } = React.useContext(AuthContext);
   const history = useHistory();
-  const [error, setError] = React.useState('');
+  // const [error, setError] = React.useState('');
   const { register, handleSubmit, formState, errors } = useForm({
     mode: "onChange",
   });
 
 
   const onSubmit = async (data) => {
-    // console.log({ data });
     try {
-      setError("");
       await signUpWithEmailAndPassword(data);
-      history.push("/");
     } catch (error) {
       console.error("Error signing up", error);
-      // setError(error.message);
-      handleError(error);
     }
   }
+
+  // React.useEffect(() => {
+  //   console.log(formState);
+  //   useCheckUsername()
+  // }, [formState])
 
   const [showPassword, setShowPassword] = React.useState(false);
 
@@ -56,9 +57,9 @@ function SignUpPage() {
 
   const handleError = (error) => {
     if (error.message.includes("users_username_key")) {
-      setError("Username already taken");
+      // setError("Username already taken");
     } else if (error.code.includes("auth")) {
-      setError(error.message);
+      // setError(error.message);
     }
   }
 

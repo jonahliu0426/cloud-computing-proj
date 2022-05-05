@@ -188,7 +188,7 @@ const EditUserInfo = ({ user }) => {
   return (
     <section className={classes.container}>
       <div className={classes.pictureSectionItem}>
-        <ProfilePicture size={45} image={profileImage} />
+        <ProfilePicture user={user} size={45} image={profileImage} />
         <div className={classes.justifySelfStart}>
           <Typography className={classes.typography}>
             {user.username}

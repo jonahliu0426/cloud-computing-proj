@@ -5,6 +5,7 @@ import defaultUserImage from "./images/default-user-image.jpg";
 import { Auth, Hub } from 'aws-amplify';
 import { useHistory } from "react-router-dom";
 import { GET_USER_ID } from "./graphql/queries";
+import useCheckUsername from "./utils/checkUsername";
 
 const initialState = {
 
@@ -15,6 +16,7 @@ export const AuthContext = React.createContext()
 function AuthProvider({ children }) {
     const [authState, setAuthState] = React.useState({ status: "loading" });
     const [createUser] = useMutation(CREATE_USER);
+    const [error, setError] = React.useState('');
 
 
     async function getUser() {
@@ -78,6 +80,14 @@ function AuthProvider({ children }) {
                 setAuthState({ status: 'in', user: credentials });
                 console.log(authState);
 
+            }
+            if (payload.event === 'signIn_failure') {
+                setError(payload.data.message);
+                return;
+            };
+            if (payload.event === 'signUp_failure') {
+                setError(payload.data.message);
+                return;
             }
             if (payload.event === 'signOut') {
                 return setAuthState({ status: 'out' });
@@ -172,6 +182,7 @@ function AuthProvider({ children }) {
                 updateEmail,
                 loginWithSSO,
                 getUser,
+                error,
             }}
         >
             {children}

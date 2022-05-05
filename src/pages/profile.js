@@ -25,7 +25,9 @@ function ProfilePage() {
   const { data, loading } = useQuery(GET_USER_PROFILE, { variables, fetchPolicy: "no-cache" });
 
   if (loading) return <LoadingScreen />
+  console.log('user', data.users);
   const [user] = data.users
+  console.log('user', user);
   const isOwner = user.id === currentUserId;
 
   const handleOptionsMenuClick = () => {

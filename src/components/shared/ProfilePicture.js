@@ -15,6 +15,7 @@ function ProfilePicture({
   const [img, setImg] = React.useState(image);
   const inputRef = React.useRef();
   const [editUserAvatar] = useMutation(EDIT_USER_AVATAR);
+  console.log('user', user);
   function openFileInput() {
     inputRef.current.click();
   }
@@ -40,7 +41,7 @@ function ProfilePicture({
       {image ? (
         <div className={classes.wrapper}
           onClick={isOwner ? openFileInput : () => null}>
-          <img src={user.profile_image} alt="user profile" className={classes.image} />
+          <img src={image} alt="user profile" className={classes.image} />
         </div>
       ) : (
         <div className={classes.wrapper}>
