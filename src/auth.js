@@ -1,22 +1,27 @@
 import { useMutation, useQuery } from "@apollo/client";
 import React from "react";
-import { CREATE_USER } from "./graphql/mutations";
+import { CREATE_USER, UPDATE_USER_ID } from "./graphql/mutations";
 import defaultUserImage from "./images/default-user-image.jpg";
 import { Auth, Hub } from 'aws-amplify';
-import { useHistory } from "react-router-dom";
-import { GET_USER_ID } from "./graphql/queries";
-import useCheckUsername from "./utils/checkUsername";
 
-const initialState = {
-
-}
 
 export const AuthContext = React.createContext()
 
 function AuthProvider({ children }) {
     const [authState, setAuthState] = React.useState({ status: "loading" });
     const [createUser] = useMutation(CREATE_USER);
+    const [updateUserId] = useMutation(UPDATE_USER_ID);
     const [error, setError] = React.useState('');
+
+    const handleError = (error) => {
+        if (error.message.includes("users_username_key")) {
+            setError("Username already taken");
+        } else if (error.message.includes("users_email_key")) {
+            setError("Email already taken");
+        } else if (error.code.includes("auth")) {
+            setError(error.message);
+        }
+    }
 
 
     async function getUser() {
@@ -61,9 +66,9 @@ function AuthProvider({ children }) {
     React.useEffect(() => {
         Hub.listen('auth', async ({ payload }) => {
             console.log(payload)
-            if (payload.event === 'signUp') {
-                putUser();
-            }
+            // if (payload.event === 'signUp') {
+            //     putUser();
+            // }
             if (payload.event === 'signIn') {
                 const credentials = await Auth.currentAuthenticatedUser();
                 console.log('credentials', credentials);
@@ -98,7 +103,6 @@ function AuthProvider({ children }) {
     }, []);
 
     const loginWithSSO = async (provider) => {
-        // e.preventDefault();
         try {
             await Auth.federatedSignIn({ provider: provider });
             // const credentials = Auth.currentAuthenticatedUser();
@@ -121,32 +125,44 @@ function AuthProvider({ children }) {
         }
     }
 
-    const signUpWithEmailAndPassword = async (formData) => {
+    const signUpWithEmailAndPassword = (formData) => {
         try {
-            const username = formData.email;
-            const password = formData.password;
-            const data = await Auth.signUp({
-                username,
-                password,
-                attributes: {
-                    email: formData.email,          // optional
-                    phone_number: formData.phoneNumber,   // optional - E.164 number convention
-                }
-            });
-            console.log(data);
-
             const variables = {
-                userId: data.userSub,
+                userId: '',
                 name: formData.name,
                 username: formData.username,
-                email: data.user.username,
+                email: formData.email,
                 bio: "",
                 website: "",
                 phoneNumber: "",
                 profileImage: defaultUserImage
             }
-            await createUser({ variables });
-            await logInWithEmailAndPassword(username, password);
+            createUser({ variables }).then(() => {
+                const username = formData.email;
+                const password = formData.password;
+                Auth.signUp({
+                    username,
+                    password,
+                    attributes: {
+                        email: formData.email,          // optional
+                        phone_number: formData.phoneNumber,   // optional - E.164 number convention
+                    }
+                }).then(async (data) => {
+                    const variables = {
+                        username: formData.username,
+                        userId: data.userSub
+                    }
+                    // console.log(variables2);
+                    await updateUserId({ variables })
+                    console.log('updated');
+                });
+            }).catch(e => {
+                handleError(e);
+            })
+
+
+
+            // logInWithEmailAndPassword(username, password);
 
         } catch (error) {
             console.error('error signing up', error);
@@ -183,6 +199,7 @@ function AuthProvider({ children }) {
                 loginWithSSO,
                 getUser,
                 error,
+                setError
             }}
         >
             {children}

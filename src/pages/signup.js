@@ -27,10 +27,10 @@ import useCheckUsername from "../utils/checkUsername";
 function SignUpPage() {
   const client = useApolloClient();
   const classes = useSignUpPageStyles();
-  const { signUpWithEmailAndPassword, error } = React.useContext(AuthContext);
+  const { signUpWithEmailAndPassword, error, setError } = React.useContext(AuthContext);
   const history = useHistory();
   // const [error, setError] = React.useState('');
-  const { register, handleSubmit, formState, errors } = useForm({
+  const { register, handleSubmit, formState, errors, setValue } = useForm({
     mode: "onChange",
   });
 
@@ -38,8 +38,14 @@ function SignUpPage() {
   const onSubmit = async (data) => {
     try {
       await signUpWithEmailAndPassword(data);
+      setValue('email', '');
+      setValue('username', '');
+      setValue('name', '');
+      setValue('password', '');
+      alert('Sign up succeed! Please verify your email for us before you log in.')
     } catch (error) {
       console.error("Error signing up", error);
+      handleError(error)
     }
   }
 
@@ -57,7 +63,9 @@ function SignUpPage() {
 
   const handleError = (error) => {
     if (error.message.includes("users_username_key")) {
-      // setError("Username already taken");
+      setError("Username already taken");
+    } else if (error.message.includes("users_email_key")) {
+      setError("Email already taken");
     } else if (error.code.includes("auth")) {
       // setError(error.message);
     }
@@ -70,6 +78,8 @@ function SignUpPage() {
       variables,
     });
     const isUsernameValid = response.data.users.length === 0;
+    if (!isUsernameValid) setError('Username has been taken')
+    else setError('')
     return isUsernameValid;
   }
 
@@ -132,7 +142,6 @@ function SignUpPage() {
                 })}
                 fullWidth
                 name="name"
-                // onChange={handleChange}
                 variant="filled"
                 label="Full Name"
                 margin="dense"
@@ -146,7 +155,6 @@ function SignUpPage() {
               <TextField
                 fullWidth
                 name="username"
-                // onChange={handleChange}
                 variant="filled"
                 label="username"
                 margin="dense"
