@@ -145,3 +145,10 @@ export const DELETE_POST = gql`
     }
   }
 `
+export const UPDATE_USER_ID = gql`
+  mutation updateUserId($username: String!, $userId: String!){
+    update_users(where: {username: {_eq: $username}}, _set: {user_id: $userId}){
+      affected_rows
+    }
+  }
+`
