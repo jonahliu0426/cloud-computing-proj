@@ -14,7 +14,7 @@ export default class TrendTags extends React.Component {
     }
 
     componentDidMount() {
-        fetch("http://34.205.71.184:8080/api/etl/top-tags")
+        fetch("https://lifjc152o5.execute-api.us-east-1.amazonaws.com/prod/etl/top-tags")
             .then(res => res.json())
             .then(
                 (result) => {
