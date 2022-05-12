@@ -36,6 +36,13 @@ const handleImageUpload = async ({ user, media, stateFunction, gqlFunction, acti
 
                     })
                     .catch(error => console.error(error));
+                // add labels to data pipeline
+                labels.map(label => {
+                    fetch('http://34.205.71.184:8080/api/etl/tag/' + label)
+                        .then(async response => {
+                            console.log(response)
+                        })
+                })
             }
 
             if (actionType === 'UPLOAD_AVATAR') {

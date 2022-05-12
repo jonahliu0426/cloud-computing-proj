@@ -12,6 +12,7 @@ import { UserContext } from "../App";
 import { useQuery } from "@apollo/client";
 import { GET_FEED } from "../graphql/queries";
 import usePageBottom from "../utils/usePageBottom";
+import TrendTags from "../components/trend/TrendTags";
 
 const FeedPost = React.lazy(() => import("../components/feed/FeedPost"));
 
@@ -64,6 +65,7 @@ function FeedPage() {
             <div className={classes.sidebarWrapper}>
               <UserCard user={me} avatarSize={50} />
               <FeedSideSuggestions />
+              <TrendTags />
             </div>
           </div>
         </Hidden>
