@@ -19,6 +19,7 @@ import Amplify, { Auth, Hub } from 'aws-amplify';
 import awsconfig from './aws-exports';
 import NftDetail from "./pages/detail"
 import ProfileBalancePage from "./pages/balance"
+import NewTicket from "./new-ticket/NewTicket"
 
 // Auth.configure(awsconfig);
 
@@ -83,6 +84,7 @@ function App() {
           <Route path="/nft/:id" component={NftDetail}/>
           <Route path="/explore" component={ExplorePage} />
           <Route path="/search/:query" component={SearchPage} />
+          <Route exact path="/help" component={NewTicket} />
           <Route exact path="/:username" component={ProfilePage} />
           <Route exact path="/p/:postId" component={PostPage} />
           <Route path="/accounts/edit" component={EditProfilePage} />

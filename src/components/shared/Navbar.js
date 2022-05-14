@@ -269,10 +269,14 @@ const Links = ({ path }) => {
             className={classes.profileImage}
           />
         </Link>
+        <Link to='/help'>
+          <img src="https://img.icons8.com/ios-glyphs/30/000000/question-mark.png"/>
+        </Link>
       </div >
     </div >
   )
 }
+
 
 const Progress = ({ isAnimating }) => {
   const classes = useNavbarStyles();
