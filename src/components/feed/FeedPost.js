@@ -26,6 +26,11 @@ function FeedPost({ post, index }) {
   const likesCount = likes_aggregate.aggregate.count;
   const commentsCount = comments_aggregate.aggregate.count;
 
+  const nft_path = {
+    pathname: '/nft/' + id,
+    state: post
+  }
+
   return (
     <>
       <article className={classes.article}>
@@ -39,7 +44,7 @@ function FeedPost({ post, index }) {
         </div>
         {/* Feed Post Image */}
         <div>
-          <Img src={media} alt="Post media" className={classes.image} />
+          <Link to={nft_path}><Img src={media} alt="Post media" className={classes.image} /></Link>
         </div>
         {/* Feed Post Button */}
         <div className={classes.postButtonsWrapper}>

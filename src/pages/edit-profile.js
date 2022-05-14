@@ -44,6 +44,9 @@ function EditProfilePage({ history }) {
         history.push('/accounts/edit');
         break;
       }
+      case 1: {
+        history.push('/accounts/balance')
+      }
       default:
         break;
     }
@@ -51,6 +54,7 @@ function EditProfilePage({ history }) {
 
   const options = [
     "Edit Profile",
+    "Wallet",
     "Change Password",
     "Apps and Websites",
     "Email and SMS",

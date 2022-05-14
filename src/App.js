@@ -17,6 +17,8 @@ import { ME } from "./graphql/subscriptions";
 import LoadingScreen from "./components/shared/LoadingScreen";
 import Amplify, { Auth, Hub } from 'aws-amplify';
 import awsconfig from './aws-exports';
+import NftDetail from "./pages/detail"
+import ProfileBalancePage from "./pages/balance"
 
 // Auth.configure(awsconfig);
 
@@ -78,11 +80,13 @@ function App() {
       <UserContext.Provider value={{ me, currentUserId, followerIds, followingIds, feedIds }}>
         <Switch location={isModalOpen ? prevLocation.current : location}>
           <Route exact path="/" component={FeedPage} />
+          <Route path="/nft/:id" component={NftDetail}/>
           <Route path="/explore" component={ExplorePage} />
           <Route path="/search/:query" component={SearchPage} />
           <Route exact path="/:username" component={ProfilePage} />
           <Route exact path="/p/:postId" component={PostPage} />
           <Route path="/accounts/edit" component={EditProfilePage} />
+          <Route path="/accounts/balance" component={ProfileBalancePage} />
           <Route path="/accounts/login" component={LoginPage} />
           <Route path="/accounts/emailsignup" component={SignUpPage} />
           <Route path="*" component={NotFoundPage} />
