@@ -335,7 +335,7 @@ export const useNavbarStyles = makeStyles(theme => ({
   profileImage: {
     width: "22px !important",
     height: "22px !important",
-    marginBottom: "5px !important"
+    // marginBottom: "5px !important"
   },
   followers: {
     backgroundImage: `url(${IconSheet})`,

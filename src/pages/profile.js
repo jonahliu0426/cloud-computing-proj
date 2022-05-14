@@ -11,7 +11,7 @@ import ProfileTabs from "../components/profile/ProfileTabs";
 import { useApolloClient, useMutation, useQuery } from "@apollo/client";
 import { GET_USER_PROFILE } from "../graphql/queries";
 import LoadingScreen from "../components/shared/LoadingScreen";
-import { UserContext } from "../App";
+import { UserContext, WalletContext } from "../App";
 import { FOLLOW_USER, UNFOLLOW_USER } from "../graphql/mutations";
 import { AuthContext } from "../auth";
 
@@ -19,6 +19,7 @@ import { AuthContext } from "../auth";
 function ProfilePage() {
   const { username } = useParams();
   const { currentUserId } = React.useContext(UserContext);
+  const { account } = React.useContext(WalletContext);
   const classes = useProfilePageStyles();
   const [showOptionMenu, setShowOptionMenu] = React.useState(false);
   const variables = { username };
@@ -72,7 +73,7 @@ function ProfilePage() {
           </Card>
         </Hidden>
         {showOptionMenu && <OptionsMenu handleCloseMenu={handleCloseMenu} />}
-        <ProfileTabs user={user} isOwner={isOwner} />
+        <ProfileTabs account={account} user={user} isOwner={isOwner} />
       </div>
     </Layout>
   )

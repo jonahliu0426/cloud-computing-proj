@@ -10,10 +10,12 @@ import client from "./graphql/client";
 import AuthProvider from "./auth";
 import Amplify, { Auth, API } from 'aws-amplify';
 import awsmobile from './aws-exports';
+import { MoralisProvider } from "react-moralis";
 
 
 // window.LOG_LEVEL = 'DEBUG';
-
+// Add this in node_modules/react-dom/index.js
+window.React1 = require('react');
 
 export const UserContext = React.createContext();
 
@@ -70,12 +72,14 @@ root.render(
   <ErrorBoundary>
     <ApolloProvider client={client}>
       <AuthProvider>
-        <MuiThemeProvider theme={theme}>
-          <CssBaseline />
-          <Router>
-            <App />
-          </Router>
-        </MuiThemeProvider>
+        <MoralisProvider serverUrl="https://r4umfs4xjt7v.usemoralis.com:2053/server" appId="RPtsniAdE4ITyRRzoaUDVB0BoAMtMCSBPCgZwB5f">
+          <MuiThemeProvider theme={theme}>
+            <CssBaseline />
+            <Router>
+              <App />
+            </Router>
+          </MuiThemeProvider>
+        </MoralisProvider>
       </AuthProvider>
     </ApolloProvider>
   </ErrorBoundary>

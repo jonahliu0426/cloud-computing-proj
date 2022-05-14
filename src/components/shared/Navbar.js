@@ -13,6 +13,9 @@ import { UserContext } from "../../App";
 import AddPostDialog from "../post/AddPostDialog";
 import { isAfter } from "date-fns";
 import SpeechToText from "../../utils/transcribe";
+import { WalletContext } from "../../App";
+import { truncateAddress } from "../../utils/truncateAddress";
+
 
 
 
@@ -85,7 +88,13 @@ const Search = ({ history }) => {
 
   async function handleLabelSearch() {
     try {
-      history.push(`/search/${query}`);
+      history.push({
+        pathname: `/search`,
+        search: `?q=${query}`,
+        state: {
+          query: query
+        }
+      });
     } catch (err) {
       console.error(err)
     }
@@ -174,6 +183,7 @@ const Search = ({ history }) => {
 
 const Links = ({ path }) => {
   const { me, currentUserId } = React.useContext(UserContext);
+  const { connectWallet, disconnect, account } = React.useContext(WalletContext);
   const lastChecked = me.last_checked;
   const newNotifications = me.notifications.filter(({ created_at }) =>
     isAfter(new Date(created_at), new Date(lastChecked))
@@ -270,8 +280,24 @@ const Links = ({ path }) => {
           />
         </Link>
         <Link to='/help'>
-          <img src="https://img.icons8.com/ios-glyphs/30/000000/question-mark.png"/>
+          <img src="https://img.icons8.com/ios-glyphs/30/000000/question-mark.png" width="20px" height="20px" alt="help page" />
         </Link>
+        {!account ? (
+          <Button
+            style={{ backgroundColor: "#764bbb", color: "white" }}
+            className={classes.button}
+            onClick={connectWallet}>
+            Connect Wallet
+          </Button>
+        ) : (
+          <Button
+            onClick={disconnect}
+            style={{ color: "#764bbb" }}
+          >
+            <Typography>{`Account: ${truncateAddress(account)}`}
+            </Typography>
+          </Button>
+        )}
       </div >
     </div >
   )

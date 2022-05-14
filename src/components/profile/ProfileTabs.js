@@ -3,11 +3,77 @@ import { useProfileTabsStyles } from "../../styles";
 import { Hidden, Tabs, Divider, Tab, Typography } from "@material-ui/core";
 import { GridIcon, SaveIcon } from "../../icons";
 import GridPost from "../shared/GridPost";
+import { useMoralisWeb3Api, useMoralisWeb3ApiCall } from "react-moralis";
+import GridNFT from "../shared/GridNFT";
+import { useEffect, useState, useContext } from "react";
+import { useIPFS } from "../../utils/useIPFS";
+import { WalletContext } from "../../App";
+// import { useNFTBalance } from "../../utils/useNFTBalance";
+// Add this in your component file
+require('react-dom');
+window.React2 = require('react');
+console.log(window.React1 === window.React2);
 
 
-function ProfileTabs({ user, isOwner }) {
+
+function ProfileTabs({ user, isOwner, account }) {
+  const Web3Api = useMoralisWeb3Api();
+
+  // const { NFTBalance } = useNFTBalance(options, Web3Api);
   const classes = useProfileTabsStyles();
   const [value, setValue] = React.useState(0)
+
+  // const [NFTs, setNFTs] = React.useState();
+
+  const [NFTBalance, setNFTBalance] = useState([]);
+  const { web3User } = useContext(WalletContext);
+  console.log('web3user', web3User);
+  const { resolveLink } = useIPFS();
+
+
+  useEffect(() => {
+    async function fetchData() {
+      if (!web3User) {
+        if (NFTBalance.length > 0) {
+          setNFTBalance([])
+        }
+        return null
+      };
+      // console.log('nft data', data);
+      const options = {
+        chain: "eth",
+        address: account
+      };
+      const data = await Web3Api.account.getNFTs(options);
+      if (data?.result) {
+        const NFTs = data.result;
+        // setFetchSuccess(true);
+        for (let NFT of NFTs) {
+          if (NFT?.metadata) {
+            NFT.metadata = JSON.parse(NFT.metadata);
+            NFT.image = resolveLink(NFT.metadata?.image);
+          } else if (NFT?.token_uri) {
+
+            try {
+              await fetch(`https://shielded-mountain-80433.herokuapp.com//${NFT.token_uri}`)
+                .then(response => response.json())
+                .then(data => {
+                  NFT.image = resolveLink(data.image);
+                  console.log('NFT image', NFT.image)
+                });
+            } catch (error) {
+              // setFetchSuccess(false);
+            }
+          }
+        }
+        setNFTBalance(NFTs);
+        console.log('NFT Balance', NFTBalance)
+      }
+    }
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [web3User]);
+  // console.log('nft balance', NFTBalance);
 
   return (
     <>
@@ -31,15 +97,7 @@ function ProfileTabs({ user, isOwner }) {
                 wrapper: classes.tabWrapper
               }}
             />
-            <Tab
-              icon={<span className={classes.NFTIconLarge} />}
-              label="NFT"
-              classes={{
-                root: classes.root,
-                labelIcon: classes.tabLabelIcon,
-                wrapper: classes.tabWrapper
-              }}
-            />
+
             {isOwner && (
               <Tab
                 icon={<span className={classes.savedIconLarge} />}
@@ -51,6 +109,15 @@ function ProfileTabs({ user, isOwner }) {
                 }}
               />
             )}
+            {NFTBalance && <Tab
+              icon={<span className={classes.NFTIconLarge} />}
+              label="NFT"
+              classes={{
+                root: classes.root,
+                labelIcon: classes.tabLabelIcon,
+                wrapper: classes.tabWrapper
+              }}
+            />}
           </Tabs>
         </Hidden>
         <Hidden smUp>
@@ -80,8 +147,8 @@ function ProfileTabs({ user, isOwner }) {
         <Hidden smUp>{user.posts.length === 0 && <Divider />}</Hidden>
       </section>
       {value === 0 && <ProfilePosts user={user} isOwner={isOwner} />}
-      {value === 1 && <NFTPosts user={user} isOwner={isOwner} />}
-      {value === 2 && <SavedPosts user={user} isOwner={isOwner} />}
+      {value === 1 && <SavedPosts user={user} isOwner={isOwner} />}
+      {value === 2 && <NFTPosts account={account} user={user} isOwner={isOwner} NFTs={NFTBalance} />}
     </>
   )
 }
@@ -143,15 +210,18 @@ const SavedPosts = ({ user, isOwner }) => {
   );
 }
 
-const NFTPosts = ({ user, isOwner }) => {
+const NFTPosts = ({ user, isOwner, account, NFTs }) => {
   const classes = useProfileTabsStyles();
+  console.log('wallet account', account)
+  console.log('NFT', NFTs);
 
-  if (user.nfts?.length === 0) {
+
+  if (NFTs?.length === 0) {
     return (
       <section className={classes.profilePostsSection}>
         <div className={classes.noContent}>
           <div className={classes.nftCollectionIcon} />
-          {isOwner ? (
+          {isOwner && !NFTs ? (
             <>
               <Typography variant="h4">
                 NFT Collection
@@ -175,32 +245,20 @@ const NFTPosts = ({ user, isOwner }) => {
       </section>
     )
   }
+  else {
+    return (
+      <>
+        <article className={classes.article}>
+          <div className={classes.postContainer}>
+            {NFTs.filter((nft, i) => (nft.hasOwnProperty('image') || (nft?.hasOwnProperty('metadata') && nft['metadata']?.hasOwnProperty('image_url') && nft['metadata']['image_url'] !== 'undefined'))).map((nft, i) => (
+              <GridNFT key={i} nft={nft} />
+            ))}
+          </div>
+        </article>
+      </>
+    )
+  }
 
-  return (
-    <>
-      <section className={classes.profilePostsSection}>
-        <div className={classes.noContent}>
-          <div className={classes.nftCollectionIcon} />
-          <Typography variant="h4">
-            NFT Collection
-          </Typography>
-          <Typography align="center">
-            Discover, collect, and sell extraordinary NFTs
-          </Typography>
-        </div>
-      </section>
-      <article className={classes.article}>
-        <div className={classes.postContainer}>
-          {user.nfts?.map(nft => (
-            <GridNFT key={nft.id} nft={nft} />
-          ))}
-        </div>
-      </article>
-    </>
-  )
 }
 
-const GridNFT = () => {
-  return <>NFT Post</>
-}
 export default ProfileTabs;
