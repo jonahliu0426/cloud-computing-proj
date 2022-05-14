@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.Properties;
 
 @Service
-public class JobService {
+public class EtlService {
 
-    private static final String bootstrapServers = "b-1.kafka-cluster.o36u01.c24.kafka.us-east-1.amazonaws.com:9092,b-2.kafka-cluster.o36u01.c24.kafka.us-east-1.amazonaws.com:9092";
+    private static final String bootstrapServers = "localhost:9092";
     private static final String topic = "tag-topic";
     private static final String redisHost = "localhost";
     private static final int redisPort = 6379;
