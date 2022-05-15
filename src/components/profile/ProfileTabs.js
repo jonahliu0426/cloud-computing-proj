@@ -33,17 +33,22 @@ function ProfileTabs({ user, isOwner, account }) {
 
   useEffect(() => {
     async function fetchData() {
-      if (!web3User) {
+      if (!web3User && isOwner) {
         if (NFTBalance.length > 0) {
           setNFTBalance([])
         }
         return null
       };
       // console.log('nft data', data);
+      if (!isOwner && user.wallet_address === '') {
+        if (NFTBalance.length > 0) setNFTBalance([])
+        return null;
+      }
       const options = {
         chain: "eth",
-        address: account
+        address: isOwner ? account : user.wallet_address
       };
+      console.log('options', options);
       const data = await Web3Api.account.getNFTs(options);
       if (data?.result) {
         const NFTs = data.result;
@@ -97,7 +102,15 @@ function ProfileTabs({ user, isOwner, account }) {
                 wrapper: classes.tabWrapper
               }}
             />
-
+            <Tab
+              icon={<span className={classes.NFTIconLarge} />}
+              label="NFT"
+              classes={{
+                root: classes.root,
+                labelIcon: classes.tabLabelIcon,
+                wrapper: classes.tabWrapper
+              }}
+            />
             {isOwner && (
               <Tab
                 icon={<span className={classes.savedIconLarge} />}
@@ -109,15 +122,7 @@ function ProfileTabs({ user, isOwner, account }) {
                 }}
               />
             )}
-            {NFTBalance && <Tab
-              icon={<span className={classes.NFTIconLarge} />}
-              label="NFT"
-              classes={{
-                root: classes.root,
-                labelIcon: classes.tabLabelIcon,
-                wrapper: classes.tabWrapper
-              }}
-            />}
+
           </Tabs>
         </Hidden>
         <Hidden smUp>
@@ -147,8 +152,8 @@ function ProfileTabs({ user, isOwner, account }) {
         <Hidden smUp>{user.posts.length === 0 && <Divider />}</Hidden>
       </section>
       {value === 0 && <ProfilePosts user={user} isOwner={isOwner} />}
-      {value === 1 && <SavedPosts user={user} isOwner={isOwner} />}
-      {value === 2 && <NFTPosts account={account} user={user} isOwner={isOwner} NFTs={NFTBalance} />}
+      {value === 1 && <NFTPosts account={account} user={user} isOwner={isOwner} NFTs={NFTBalance} />}
+      {value === 2 && <SavedPosts user={user} isOwner={isOwner} />}
     </>
   )
 }

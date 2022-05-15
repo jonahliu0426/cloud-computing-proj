@@ -61,6 +61,7 @@ query getUserProfile($username: String!) {
     website
     bio
     profile_image
+    wallet_address
     posts_aggregate {
       aggregate {
         count

@@ -54,7 +54,7 @@ const Logo = () => {
     <div className={classes.logoContainer}>
       <Link to="/">
         <div className={classes.logoWrapper}>
-          <img src={logo} alt="Instagram logo" className={classes.logo} />
+          <img src={logo} alt="EnterSpace logo" className={classes.logo} />
         </div>
       </Link>
     </div>

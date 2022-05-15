@@ -152,3 +152,11 @@ export const UPDATE_USER_ID = gql`
     }
   }
 `
+
+export const UPDATE_USER_WALLET = gql`
+  mutation updateUserWallet($userId: String!, $walletAddress: String!){
+    update_users(where: {user_id: {_eq: $userId}}, _set: {wallet_address: $walletAddress}){
+      affected_rows
+    }
+  }
+`

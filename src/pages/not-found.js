@@ -14,7 +14,7 @@ function NotFoundPage() {
         {" "}
         <Link to="/">
           <Typography color="primary" component="span">
-            Go back to Instagram
+            Go back to EnterSpace
           </Typography>
         </Link>
       </Typography>

@@ -11,128 +11,128 @@ import LoadingScreen from "../components/shared/LoadingScreen";
 import { Alert, Button } from "react-bootstrap"
 
 function ProfileBalancePage({ history }) {
-    const { currentUserId } = React.useContext(UserContext);
-    const variables = { id: currentUserId }
-    const { data, loading } = useQuery(GET_EDIT_USER_PROFILE, { variables });
-    const classes = useEditProfilePageStyles();
-    const [showDrawer, setDrawer] = React.useState(false);
-    const path = history.location.pathname;
+  const { currentUserId } = React.useContext(UserContext);
+  const variables = { id: currentUserId }
+  const { data, loading } = useQuery(GET_EDIT_USER_PROFILE, { variables });
+  const classes = useEditProfilePageStyles();
+  const [showDrawer, setDrawer] = React.useState(false);
+  const path = history.location.pathname;
 
-    const handleToggleDrawer = () => {
-        setDrawer(prev => !prev);
+  const handleToggleDrawer = () => {
+    setDrawer(prev => !prev);
+  }
+
+  const handleSelected = (index) => {
+    switch (index) {
+      case 0: {
+        return path.includes('edit');
       }
-    
-      const handleSelected = (index) => {
-        switch (index) {
-          case 0: {
-            return path.includes('edit');
-          }
-          default:
-            break;
-        }
+      default:
+        break;
+    }
+  }
+
+  const handleListClick = (index) => {
+    switch (index) {
+      case 0: {
+        history.push('/accounts/edit');
+        break;
       }
-    
-      const handleListClick = (index) => {
-        switch (index) {
-          case 0: {
-            history.push('/accounts/edit');
-            break;
-          }
-          case 1: {
-            history.push('/accounts/balance')
-          }
-          default:
-            break;
-        }
+      case 1: {
+        history.push('/accounts/balance')
       }
-    
-      const options = [
-        "Edit Profile",
-        "Wallet",
-        "Change Password",
-        "Apps and Websites",
-        "Email and SMS",
-        "Push Notification",
-        "Manage Contacts",
-        "Privacy and Security",
-        "Login Activity",
-        "Emails from Instagram",
-      ];
-    
-      const drawer = (
-        <List>
-          {options.map((option, index) => (
-            <ListItem
-              key={option}
-              button
-              selected={handleSelected(index)}
-              onClick={() => handleListClick(index)}
+      default:
+        break;
+    }
+  }
+
+  const options = [
+    "Edit Profile",
+    "Wallet",
+    "Change Password",
+    "Apps and Websites",
+    "Email and SMS",
+    "Push Notification",
+    "Manage Contacts",
+    "Privacy and Security",
+    "Login Activity",
+    "Emails from EnterSpace",
+  ];
+
+  const drawer = (
+    <List>
+      {options.map((option, index) => (
+        <ListItem
+          key={option}
+          button
+          selected={handleSelected(index)}
+          onClick={() => handleListClick(index)}
+          classes={{
+            selected: classes.listItemSelected,
+            button: classes.listItemButton
+          }}
+        >
+          <ListItemText primary={option} />
+        </ListItem>
+      ))}
+    </List>
+  )
+
+  const [balance, setBalance] = React.useState()
+  if (loading) {
+    return <LoadingScreen />
+  }
+  fetch("https://lifjc152o5.execute-api.us-east-1.amazonaws.com/prod/user/balance/" + data.users_by_pk.name)
+    .then(res => res.json())
+    .then((res) => {
+      setBalance(res.data)
+    })
+
+  return (
+    <Layout title="Edit Profile">
+      <section className={classes.section}>
+        <IconButton
+          edge="start"
+          onClick={handleToggleDrawer}
+          className={classes.menuButton}
+        >
+          <Menu />
+        </IconButton>
+        <nav>
+          <Hidden smUp implementation="css">
+            <Drawer
+              variant="temporary"
+              anchor="left"
+              open={showDrawer}
+              onClose={handleToggleDrawer}
+              classes={{ paperAnchorLeft: classes.temporaryDrawer }}
+            >
+              {drawer}
+            </Drawer>
+          </Hidden>
+          <Hidden
+            xsDown
+            implementation="css"
+            className={classes.permanentDrawerRoot}
+          >
+            <Drawer
+              variant="permanent"
+              open
               classes={{
-                selected: classes.listItemSelected,
-                button: classes.listItemButton
+                paper: classes.permanentDrawerPaper,
+                root: classes.permanentDrawerRoot
               }}
             >
-              <ListItemText primary={option} />
-            </ListItem>
-          ))}
-        </List>
-      )
-    
-    const [balance, setBalance] = React.useState()
-    if (loading) {
-        return <LoadingScreen/>
-    }
-    fetch("https://lifjc152o5.execute-api.us-east-1.amazonaws.com/prod/user/balance/" + data.users_by_pk.name)
-        .then(res => res.json())
-        .then((res) => {
-            setBalance(res.data)
-        })
-
-    return (
-        <Layout title="Edit Profile">
-            <section className={classes.section}>
-            <IconButton
-                edge="start"
-                onClick={handleToggleDrawer}
-                className={classes.menuButton}
-            >
-                <Menu />
-            </IconButton>
-            <nav>
-                <Hidden smUp implementation="css">
-                <Drawer
-                    variant="temporary"
-                    anchor="left"
-                    open={showDrawer}
-                    onClose={handleToggleDrawer}
-                    classes={{ paperAnchorLeft: classes.temporaryDrawer }}
-                >
-                    {drawer}
-                </Drawer>
-                </Hidden>
-                <Hidden
-                xsDown
-                implementation="css"
-                className={classes.permanentDrawerRoot}
-                >
-                <Drawer
-                    variant="permanent"
-                    open
-                    classes={{
-                    paper: classes.permanentDrawerPaper,
-                    root: classes.permanentDrawerRoot
-                    }}
-                >
-                    {drawer}
-                </Drawer>
-                </Hidden>
-            </nav>
-            <main>
-                {path.includes('balance') && <EditUserInfo user={data.users_by_pk} balance={balance}/>}
-            </main>
-            </section>
-        </Layout>
-    )
+              {drawer}
+            </Drawer>
+          </Hidden>
+        </nav>
+        <main>
+          {path.includes('balance') && <EditUserInfo user={data.users_by_pk} balance={balance} />}
+        </main>
+      </section>
+    </Layout>
+  )
 }
 
 const DEFAULT_ERROR = { type: "", message: "" }
@@ -144,11 +144,11 @@ const EditUserInfo = ({ user, balance }) => {
   console.log(user);
 
   function onSubmit() {
-      var amount = document.getElementById("amount").value
-      fetch("https://lifjc152o5.execute-api.us-east-1.amazonaws.com/prod/user/top-up/" + user.name + "/" + amount)
-        .then(() => {
-            window.location.reload(false)
-        })
+    var amount = document.getElementById("amount").value
+    fetch("https://lifjc152o5.execute-api.us-east-1.amazonaws.com/prod/user/top-up/" + user.name + "/" + amount)
+      .then(() => {
+        window.location.reload(false)
+      })
   }
 
   return (
@@ -166,9 +166,9 @@ const EditUserInfo = ({ user, balance }) => {
         Your Balance: ${balance}
       </Alert>
 
-        <b>Amount:</b> 
-        <input type="text" name="amount" id="amount"/>
-        <Button variant="success" onClick={onSubmit}>Top up</Button>
+      <b>Amount:</b>
+      <input type="text" name="amount" id="amount" />
+      <Button variant="success" onClick={onSubmit}>Top up</Button>
       <Snackbar
         open={open}
         autoHideDuration={3000}
