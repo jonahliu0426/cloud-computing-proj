@@ -1,21 +1,22 @@
 import React, {useState, useEffect} from 'react'
 import { Form, Button, Row, Col, Spinner, Alert } from 'react-bootstrap'
 import './add-ticket-form.css'
-import { createNewTicket } from './AddTicketAction'
+import { createNewTicket } from './TicketAction'
 
-const initialFormData = {
-    email:'',
-    subject:'',
-    category:'My Account',
-    message:''
-}
+
 let initialFormError = localStorage.getItem('formError')
 initialFormError = initialFormError ? JSON.parse(initialFormError) : {
     error: '',
     successMsg: '',
 }
-export const AddTicketForm = () => {
-
+export const AddTicketForm = ({email}) => {
+    const initialFormData = {
+        email:email,
+        subject:'',
+        category:'My Account',
+        message:''
+    }
+    console.log('this is email', email)
     const [formData, setformData] = useState(initialFormData)
     const [formError, setFormError] = useState(initialFormError)
 
@@ -56,7 +57,7 @@ export const AddTicketForm = () => {
             })
         } finally {
             localStorage.setItem('formError', JSON.stringify(formError))
-            setformData(initialFormData)
+            window.location.reload()
         }
     }
 

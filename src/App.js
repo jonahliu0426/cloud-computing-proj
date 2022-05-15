@@ -19,6 +19,7 @@ import awsconfig from './aws-exports';
 import NftDetail from "./pages/detail"
 import ProfileBalancePage from "./pages/balance"
 import NewTicket from "./new-ticket/NewTicket"
+import {Ticket} from './new-ticket/Ticket'
 import CoinbaseWalletSDK from '@coinbase/wallet-sdk'
 import Web3 from 'web3'
 import { useMoralis } from "react-moralis";
@@ -155,6 +156,7 @@ function App() {
             <Route path="/accounts/balance" component={ProfileBalancePage} />
             <Route path="/accounts/login" component={LoginPage} />
             <Route path="/accounts/emailsignup" component={SignUpPage} />
+            <Route path="/select/:tid" component={Ticket} />
             <Route path="*" component={NotFoundPage} />
           </Switch>
           {isModalOpen && <Route exact path="/p/:postId" component={PostModal} />}

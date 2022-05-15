@@ -1,7 +1,51 @@
 .add-ticket-form {
-    width: 700px;
+    width: 670px;
     background: white;
     box-shadow: 0px 0px 15px -5px black;
-    margin-left: auto;
-    margin-right: auto;
+    margin: auto;
+    border-radius: 1rem;
 }
+
+
+.logo {
+    margin-left: 15px;
+  }
+  
+  .default-layout {
+    display: grid;
+    grid-template-rows: 80px auto 3rem;
+    grid-template-areas: 
+    "header"
+    "main"
+    "footer";
+  }
+  
+  header {
+    grid-area: header;
+  
+  }
+  
+  main {
+    grid-area: main;
+    min-height: 88vh;
+  }
+  
+  footer {
+    grid-area: footer;
+    background: black;
+    padding: 1rem;
+    color: #fff;
+  }
+  
+  .jumbotron { 
+    padding: 40px;
+    background-color: #fff;
+    border-radius: 1rem;
+  }
+  
+  .jumbotron2 { 
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 1rem;
+    height: 590px;
+  }
