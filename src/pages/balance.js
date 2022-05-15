@@ -1,14 +1,13 @@
 import React from "react";
 import { useEditProfilePageStyles } from "../styles";
 import Layout from "../components/shared/Layout";
-import { IconButton, Hidden, Drawer, List, ListItem, ListItemText, Typography, TextField, Snackbar, Slide } from "@material-ui/core";
+import { IconButton, Hidden, Drawer, List, ListItem, ListItemText, Typography, TextField, Button, Snackbar, Slide } from "@material-ui/core";
 import { Menu } from "@material-ui/icons";
 import ProfilePicture from "../components/shared/ProfilePicture";
 import { UserContext } from "../App";
 import { useMutation, useQuery } from "@apollo/client";
 import { GET_EDIT_USER_PROFILE } from "../graphql/queries";
 import LoadingScreen from "../components/shared/LoadingScreen";
-import { Alert, Button } from 'element-react';
 
 function ProfileBalancePage({ history }) {
     const { currentUserId } = React.useContext(UserContext);
@@ -152,7 +151,6 @@ const EditUserInfo = ({ user, balance }) => {
   }
 
   return (
-
     <section className={classes.container}>
       <div className={classes.pictureSectionItem}>
         <ProfilePicture user={user} size={45} image={profileImage} />
@@ -163,13 +161,10 @@ const EditUserInfo = ({ user, balance }) => {
         </div>
       </div>
 
-      <Alert title={"Your Balance: $" + balance} type="info" closable={false} />
-      <br/>
-      <input type="text" name="amount" id="amount"/>
-      <br/>
-      <center>
-      <Button onClick={onSubmit} type="primary">Top Up</Button>
-      </center>
+      <h3><center>Your Balance: {balance}</center></h3>
+        Amount: 
+        <input type="text" name="amount" id="amount"/>
+        <button type="button" onClick={onSubmit}>Top up</button>
       <Snackbar
         open={open}
         autoHideDuration={3000}
