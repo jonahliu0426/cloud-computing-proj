@@ -2,7 +2,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { GET_POST_NFT, GET_POST } from "../graphql/queries";
 import { useMutation, useQuery } from "@apollo/client";
-import { Row, Col, Image, ListGroup, Card, Button, ListGroupItem, Form } from "react-bootstrap"
+import { Row, Col, ListGroup, Card, Button, ListGroupItem, Form, Image, Alert } from "react-bootstrap"
 import LoadingScreen from "../components/shared/LoadingScreen";
 import { UserContext } from "../App";
 import Layout from "../components/shared/Layout";
@@ -49,40 +49,39 @@ function NftDetail () {
     if (me.name != owner) {
         price_panel =  <div>
             Price: <strong>${price}</strong>
-            <button type="button" onClick={buyNft}>Buy</button>
+            <>&nbsp;</>
+            <Button variant="success" onClick={buyNft}>Buy</Button>
         </div>
     } else {
         price_panel = <div>
-            Price: 
+            <b>Price: </b>
             <input type="text" name="amount" id="amount" placeholder={price}/>
-            <button type="button" onClick={changePrice}>Change price</button>
+            <>&nbsp;</>
+            <Button variant="success" onClick={changePrice}>Change price</Button>
         </div>
     }
     return (
         <Layout title="NFT Detail">
-            <Row md={3}>
-                <Col md={6}>
-                <Image src={media} alt="image" fluid />
-                </Col>
-                <Col md={3}>
-                <ListGroup variant='flush'>
-                    <ListGroup.Item>
-                    <h3>{caption}</h3>
-                    </ListGroup.Item>
-                    <ListGroup.Item>Create Time: {created_at}</ListGroup.Item>
-                    <ListGroup.Item>Creator: {user.name}</ListGroup.Item>
-                    <ListGroup.Item>Owner: {owner}</ListGroup.Item>
-                    <ListGroup.Item>Description: This is an NFT</ListGroup.Item>
-                </ListGroup>
-                </Col>
-                <Col md={3}>
-                <Card>
-                    <ListGroup variant='flush'>
-                        {price_panel}
-                    </ListGroup>
-                </Card>
-                </Col>
-            </Row>
+            <Image src={media} width="650px" rounded/>
+            <Alert variant="primary">
+                <Alert.Heading>{caption.slice(0, -4)}</Alert.Heading>
+                <hr />
+                <p className="mb-0">
+                    {price_panel}
+                </p>
+            </Alert>
+            <Alert variant="primary">
+                <b>Creation Time: </b> {created_at.substr(0, 10)}
+            </Alert>
+            <Alert variant="success">
+                <b>Creator: </b> {user.name}
+            </Alert>
+            <Alert variant="warning">
+                <b>Owner: </b> {owner}
+            </Alert>
+            <Alert variant="danger">
+                <b>NFT ID: </b> {id}
+            </Alert>
         </Layout>
     )
 }

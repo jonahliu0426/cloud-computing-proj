@@ -4,6 +4,7 @@ import { LoadingIcon } from "../../icons"
 import useLabelSearch from '../../utils/handleLabelSearch'
 import { useHistory } from 'react-router-dom'
 import { useFeedSideSuggestionsStyles, useUserCardStyles } from "../../styles";
+import { Badge } from "react-bootstrap"
 
 export default function TrendTags() {
     const [error, setError] = useState()
@@ -76,18 +77,15 @@ export default function TrendTags() {
     // }
 
     return (
-        <article>
-            <Paper>
+        <article className={classes.article}>
+            <Paper className={classes.paper}>
                 <Typography
                     color="textSecondary"
                     variant="subtitle2"
                     component="h2"
                     align="left"
                     gutterBottom
-                    style={{
-                        paddingLeft: "16px !important",
-                    }}
-                    fontSize="1rem !important"
+                    className={classes.typography}
                 >
                     Trending
                 </Typography>
@@ -101,7 +99,9 @@ export default function TrendTags() {
                                     <div key={idx}>
                                         <Button onClick={() => handleLabelSearch(tag.split(",")[0])}>
                                             <Typography variant='body1' component='h3' align='center'>
-                                                {idx <= 9 ? `Top ${idx + 1}` : ``} : {tag.split(",")[0]}
+                                                <Badge bg="info">
+                                                    {idx <= 9 ? `Top ${idx + 1}` : ``} : {tag.split(",")[0]}
+                                                </Badge>{' '}
                                             </Typography>
                                         </Button>
                                     </div>
