@@ -183,7 +183,7 @@ const Search = ({ history }) => {
 
 const Links = ({ path }) => {
   const { me, currentUserId } = React.useContext(UserContext);
-  const { connectWallet, disconnect, account } = React.useContext(WalletContext);
+  const { connectWallet, disconnect, walletAddress } = React.useContext(WalletContext);
   const lastChecked = me.last_checked;
   const newNotifications = me.notifications.filter(({ created_at }) =>
     isAfter(new Date(created_at), new Date(lastChecked))
@@ -282,7 +282,7 @@ const Links = ({ path }) => {
         <Link to='/help'>
           <img src="https://img.icons8.com/ios-glyphs/30/000000/question-mark.png" width="20px" height="20px" alt="help page" />
         </Link>
-        {!account ? (
+        {!walletAddress ? (
           <Button
             style={{ backgroundColor: "#764bbb", color: "white" }}
             className={classes.button}
@@ -294,7 +294,7 @@ const Links = ({ path }) => {
             onClick={disconnect}
             style={{ color: "#764bbb" }}
           >
-            <Typography>{`Account: ${truncateAddress(account)}`}
+            <Typography>{`Account: ${truncateAddress(walletAddress)}`}
             </Typography>
           </Button>
         )}

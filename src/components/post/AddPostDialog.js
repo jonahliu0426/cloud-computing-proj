@@ -8,10 +8,25 @@ import { UserContext } from '../../App';
 import serialize from '../../utils/serialize';
 import handleImageUpload from '../../utils/handleImageUpload';
 import { useMutation, useQuery } from '@apollo/client';
-import { CREATE_POST } from '../../graphql/mutations';
+import { CREATE_NFT_POST, CREATE_POST } from '../../graphql/mutations';
 import { useHistory } from 'react-router-dom';
+import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
+import { WalletContext } from '../../App';
+import Moralis from 'moralis';
+import Web3 from 'web3';
+import AWSHttpProvider from '../../awsHttpProvider';
 
+function useMoralisDapp() {
+    const context = React.useContext(WalletContext);
+    if (context === undefined) {
+        throw new Error("useMoralisDapp must be used within a MoralisDappProvider");
+    }
+    return context;
+}
 
+const web3 = new Web3(new AWSHttpProvider("nd-nkgfu667argmjc77lsftrrfqk4.ethereum.managedblockchain.us-east-1.amazonaws.com"));
+
+const nft_contract_address = "0xc8202F5C3f4276e6be6f8F45E683A71561D4Ce35";
 
 const initialValue = [
     {
@@ -20,21 +35,41 @@ const initialValue = [
     }
 ];
 
+const styles = {
+    NFTs: {
+        display: "flex",
+        flexWrap: "wrap",
+        WebkitBoxPack: "start",
+        justifyContent: "flex-start",
+        margin: "0 auto",
+        maxWidth: "1000px",
+        gap: "10px",
+    },
+};
+
 
 const AddPostDialog = ({ media, handleClose }) => {
     const { me, currentUserId } = React.useContext(UserContext);
+    const { chainId, marketAddress, contractABI, walletAddress, connectWallet } = useMoralisDapp();
+    const contractABIJson = JSON.parse(contractABI);
+    const contractProcessor = useWeb3ExecuteFunction()
     const classes = useAddPostDialogStyles();
     const editor = React.useMemo(() => withReact(createEditor()), []);
     const [value, setValue] = React.useState(initialValue);
     const [location, setLocation] = React.useState('');
+    const [NFTname, setNFTName] = React.useState('')
     const [isSubmitting, setIsSubmitting] = React.useState(false)
     const [createPost] = useMutation(CREATE_POST);
     const [labels, setLabels] = React.useState([]);
     const [labelInput, setLabelInput] = React.useState('');
+    const listItemFunction = "createMarketItem";
+    const history = useHistory();
+    const [createNFTPost] = useMutation(CREATE_NFT_POST);
+
 
     console.log(media);
 
-    function handleSharePost() {
+    async function handleSharePost() {
         setIsSubmitting(true);
         handleImageUpload({
             user: me,
@@ -49,7 +84,85 @@ const AddPostDialog = ({ media, handleClose }) => {
             labels,
         });
         setIsSubmitting(false);
+        setTimeout(() => {
+            history.push('/')
+        }, 0)
     }
+
+    async function handleCreateNFT() {
+        if (!walletAddress) {
+            alert('you must connect your wallet');
+        } else {
+            upload(media);
+        };
+    }
+
+    async function upload(data) {
+        try {
+            const imageFile = new Moralis.File(data.name, data);
+            await imageFile.saveIPFS();
+            const imageURI = imageFile.ipfs();
+            console.log('imageURI', imageURI)
+            const metadata = {
+                "name": NFTname,
+                "description": serialize({ children: value }),
+                "image": imageURI
+            }
+            const metadataFile = new Moralis.File("metadata.json", { base64: Buffer.from(JSON.stringify(metadata)).toString('base64') });
+            await metadataFile.saveIPFS();
+            const metadataURI = metadataFile.ipfs();
+            console.log('metadataURI', metadataURI)
+            const txt = await mintToken(metadataURI).then(async (txt) => {
+                notify(txt);
+                const variables = {
+                    userId: currentUserId,
+                    media: imageURI,
+                    isNFT: 1,
+                    location,
+                    caption: serialize({ children: value }),
+                }
+                console.log('nft variables', variables)
+                await createNFTPost({ variables })
+            })
+
+        } catch (error) {
+            console.error(error)
+        }
+
+    }
+
+    async function mintToken(_uri) {
+        console.log('_uri', _uri)
+        const encodedFunction = web3.eth.abi.encodeFunctionCall({
+            name: "mintToken",
+            type: "function",
+            inputs: [{
+                type: 'string',
+                name: 'tokenURI'
+            }]
+        }, [_uri]);
+
+        const transactionParameters = {
+            to: nft_contract_address,
+            // eslint-disable-next-line no-undef
+            from: ethereum.selectedAddress,
+            data: encodedFunction
+        };
+        // eslint-disable-next-line no-undef
+        const txt = await ethereum.request({
+            method: 'eth_sendTransaction',
+            params: [transactionParameters]
+        });
+        return txt
+    }
+
+    async function notify(_txt) {
+        alert(_txt);
+        setTimeout(() => {
+            history.push('/')
+        }, 0)
+    }
+
 
     const handleAddLabel = (event) => {
         if (!labelInput.trim()) return;
@@ -76,13 +189,31 @@ const AddPostDialog = ({ media, handleClose }) => {
                     <Typography align='center' variant='body1' className={classes.title}>
                         New Post
                     </Typography>
+                    {!walletAddress && (
+                        <Button
+                            style={{ backgroundColor: "#764bbb", color: "white" }}
+                            className={classes.button}
+                            onClick={connectWallet}>
+                            Connect Wallet
+                        </Button>
+                    )}&nbsp;&nbsp;
+                    <Button
+                        color="primary"
+                        variant="contained"
+                        className={classes.share}
+                        disabled={isSubmitting}
+                        onClick={handleCreateNFT}
+                        disabled={!walletAddress}
+                    >
+                        Create NFT
+                    </Button>&nbsp;&nbsp;
                     <Button
                         color="primary"
                         className={classes.share}
                         disabled={isSubmitting}
                         onClick={handleSharePost}
                     >
-                        Share
+                        Share Post
                     </Button>
                 </Toolbar>
             </AppBar>
@@ -92,7 +223,7 @@ const AddPostDialog = ({ media, handleClose }) => {
                 <Slate editor={editor} value={value} onChange={value => setValue(value)} >
                     <Editable
                         className={classes.editor}
-                        placeholder="Write your caption"
+                        placeholder="Write your NFT description"
                     />
                 </Slate>
                 <Avatar
@@ -104,7 +235,7 @@ const AddPostDialog = ({ media, handleClose }) => {
             </Paper>
             <TextField
                 fullWidth
-                placeholder='Location'
+                placeholder='NFT Name'
                 InputProps={{
                     classes: {
                         root: classes.root,
@@ -117,7 +248,7 @@ const AddPostDialog = ({ media, handleClose }) => {
                         </InputAdornment>
                     )
                 }}
-                onChange={event => setLocation(event.target.value)}
+                onChange={event => setNFTName(event.target.value)}
             />
             <TextField
                 fullWidth

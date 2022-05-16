@@ -10,6 +10,7 @@ subscription me($userId: String) {
     profile_image
     last_checked
     created_at
+    wallet_address
     followers {
       user {
         id

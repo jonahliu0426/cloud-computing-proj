@@ -1,7 +1,7 @@
 import { Typography } from "@material-ui/core";
 import React from "react";
 import { useGridPostStyles } from "../../styles";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { Image } from "@material-ui/icons";
 
 function GridNFT({ nft }) {

@@ -7,12 +7,10 @@ import { useMoralisWeb3Api, useMoralisWeb3ApiCall } from "react-moralis";
 import GridNFT from "../shared/GridNFT";
 import { useEffect, useState, useContext } from "react";
 import { useIPFS } from "../../utils/useIPFS";
-import { WalletContext } from "../../App";
+import { UserContext, WalletContext } from "../../App";
 // import { useNFTBalance } from "../../utils/useNFTBalance";
 // Add this in your component file
-require('react-dom');
-window.React2 = require('react');
-console.log(window.React1 === window.React2);
+
 
 
 
@@ -24,8 +22,8 @@ function ProfileTabs({ user, isOwner, account }) {
   const [value, setValue] = React.useState(0)
 
   // const [NFTs, setNFTs] = React.useState();
+  const { NFTBalance, setNFTBalance } = useContext(UserContext);
 
-  const [NFTBalance, setNFTBalance] = useState([]);
   const { web3User } = useContext(WalletContext);
   console.log('web3user', web3User);
   const { resolveLink } = useIPFS();
@@ -45,14 +43,15 @@ function ProfileTabs({ user, isOwner, account }) {
         return null;
       }
       const options = {
-        chain: "eth",
+        chain: "rinkeby",
         address: isOwner ? account : user.wallet_address
       };
       console.log('options', options);
       const data = await Web3Api.account.getNFTs(options);
+      console.log(data);
       if (data?.result) {
         const NFTs = data.result;
-        // setFetchSuccess(true);
+        console.log('NFTs', NFTs);
         for (let NFT of NFTs) {
           if (NFT?.metadata) {
             NFT.metadata = JSON.parse(NFT.metadata);

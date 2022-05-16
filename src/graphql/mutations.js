@@ -160,3 +160,10 @@ export const UPDATE_USER_WALLET = gql`
     }
   }
 `
+
+export const CREATE_NFT_POST = gql`
+mutation createNFTPost($userId: uuid!, $media: String!, $isNFT: Int!, $location: String, $caption: String) {
+  insert_posts(objects: {caption: $caption, location: $location, media: $media, user_id: $userId, is_nft: $isNFT}) {
+    affected_rows
+  }
+}`

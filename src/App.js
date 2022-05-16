@@ -11,7 +11,7 @@ import SignUpPage from "./pages/signup";
 import NotFoundPage from "./pages/not-found";
 import PostModal from "./components/post/PostModal";
 import { AuthContext } from "./auth";
-import { useSubscription } from "@apollo/client";
+import { useMutation, useSubscription } from "@apollo/client";
 import { ME } from "./graphql/subscriptions";
 import LoadingScreen from "./components/shared/LoadingScreen";
 import Amplify, { Auth, Hub } from 'aws-amplify';
@@ -19,10 +19,11 @@ import awsconfig from './aws-exports';
 import NftDetail from "./pages/detail"
 import ProfileBalancePage from "./pages/balance"
 import NewTicket from "./new-ticket/NewTicket"
-import {Ticket} from './new-ticket/Ticket'
+import { Ticket } from './new-ticket/Ticket'
 import CoinbaseWalletSDK from '@coinbase/wallet-sdk'
 import Web3 from 'web3'
 import { useMoralis } from "react-moralis";
+import { UPDATE_USER_WALLET } from "./graphql/mutations";
 
 
 
@@ -36,15 +37,6 @@ const APP_LOGO_URL = 'https://example.com/logo.png'
 const DEFAULT_ETH_JSONRPC_URL = 'https://mainnet.infura.io/v3/1e1d6b3ca9b84eff9fc0dbc6b70207c9'
 const DEFAULT_CHAIN_ID = 1
 
-export const coinbaseWallet = new CoinbaseWalletSDK({
-  appName: APP_NAME,
-  appLogoUrl: APP_LOGO_URL,
-  darkMode: false
-})
-
-export const ethereum = coinbaseWallet.makeWeb3Provider(DEFAULT_ETH_JSONRPC_URL, DEFAULT_CHAIN_ID)
-
-export const web3 = new Web3(ethereum)
 
 function useSearchQuery() {
   const { search } = useLocation();
@@ -54,12 +46,193 @@ function useSearchQuery() {
 
 function App() {
   const { authState, getUser } = React.useContext(AuthContext);
+  const [updateUserWallet] = useMutation(UPDATE_USER_WALLET);
+  const [NFTBalance, setNFTBalance] = useState([]);
   const isAuth = authState.status === "in";
   const userId = isAuth ? authState.user.username : null;
-  console.log('userId', userId);
   const variables = { userId };
-  console.log('variables', variables);
   const { data, loading } = useSubscription(ME, { variables, fetchPolicy: "no-cache" });
+  const [marketAddress, setMarketAddress] = React.useState("0xd9145CCE52D386f254917e481eB44e9943F39138");
+  const [contractABI, setContractABI] = React.useState(JSON.stringify([
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "nftContract",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "price",
+          "type": "uint256"
+        }
+      ],
+      "name": "createMarketItem",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "nftContract",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "itemId",
+          "type": "uint256"
+        }
+      ],
+      "name": "createMarketSale",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "itemId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "nftContract",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "seller",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "price",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "sold",
+          "type": "bool"
+        }
+      ],
+      "name": "MarketItemCreated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "itemId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        }
+      ],
+      "name": "MarketItemSold",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "fetchMarketItems",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "itemId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "nftContract",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address payable",
+              "name": "seller",
+              "type": "address"
+            },
+            {
+              "internalType": "address payable",
+              "name": "owner",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "price",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bool",
+              "name": "sold",
+              "type": "bool"
+            }
+          ],
+          "internalType": "struct marketPlaceBoilerPlate.MarketItem[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ]
+  ))
 
   const history = useHistory();
   const location = useLocation();
@@ -69,11 +242,11 @@ function App() {
   const query = useSearchQuery();
 
   // Moralis
-  const { authenticate, logout } = useMoralis();
+  const { authenticate, logout, Moralis, web3, user } = useMoralis();
 
 
   // web3 wallet
-  const [account, setAccount] = useState();
+  const [walletAddress, setWalletAddress] = useState();
   const [web3User, setWeb3User] = useState();
   const [error, setError] = useState("");
   const [chainId, setChainId] = useState();
@@ -85,8 +258,13 @@ function App() {
         .then(function (user) {
           console.log("logged in user:", user);
           setWeb3User(user)
-          const account = user.get("ethAddress");
-          if (account) setAccount(account);
+          const address = user.get("ethAddress");
+          setWalletAddress(address);
+          const variables = {
+            userId,
+            walletAddress: address
+          }
+          updateUserWallet({ variables })
         })
         .catch(function (error) {
           setError(error);
@@ -99,7 +277,7 @@ function App() {
   const disconnect = async () => {
     await logout();
     console.log("logged out");
-    setAccount('');
+    setWalletAddress('');
     setWeb3User();
   };
 
@@ -118,6 +296,7 @@ function App() {
   }, [])
 
 
+
   if (loading) return <LoadingScreen />
   console.log('after loading', isAuth);
   if (!isAuth) {
@@ -129,6 +308,8 @@ function App() {
       </Switch>
     );
   }
+
+
 
   if (data) {
     console.log('data, ', data);
@@ -142,8 +323,8 @@ function App() {
 
 
     return (
-      <UserContext.Provider value={{ me, currentUserId, followerIds, followingIds, feedIds }}>
-        <WalletContext.Provider value={{ account, connectWallet, disconnect, chainId, network, web3User }}>
+      <UserContext.Provider value={{ me, currentUserId, followerIds, followingIds, feedIds, NFTBalance, setNFTBalance }}>
+        <WalletContext.Provider value={{ marketAddress, setMarketAddress, contractABI, setContractABI, walletAddress, connectWallet, disconnect, chainId, network, web3User }}>
           <Switch location={isModalOpen ? prevLocation.current : location}>
             <Route exact path="/" component={FeedPage} />
             <Route path="/nft/:id" component={NftDetail} />

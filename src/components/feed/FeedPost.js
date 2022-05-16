@@ -1,5 +1,5 @@
 import { Button, Divider, Hidden, TextField, Typography } from "@material-ui/core";
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useFeedPostStyles } from "../../styles";
 import UserCard from "../shared/UserCard";
@@ -13,6 +13,7 @@ import { SAVE_POST, UNSAVE_POST, LIKE_POST, UNLIKE_POST, CREATE_COMMENT } from '
 import { GET_FEED } from '../../graphql/queries';
 import { useMutation } from "@apollo/client";
 import { UserContext } from "../../App";
+import { useIPFS } from "../../utils/useIPFS";
 
 
 
@@ -20,11 +21,14 @@ import { UserContext } from "../../App";
 function FeedPost({ post, index }) {
   const classes = useFeedPostStyles();
   const [showCaption, setShowCaption] = React.useState(false);
-  const { id, media, likes, user, caption, created_at, comments, likes_aggregate, saved_posts, location, comments_aggregate } = post;
+  const { id, is_nft, media, likes, user, caption, created_at, comments, likes_aggregate, saved_posts, location, comments_aggregate } = post;
   const showFollowingSuggestions = index === 1;
   const [showOptionDialog, setShowOptionDialog] = React.useState(false);
   const likesCount = likes_aggregate.aggregate.count;
   const commentsCount = comments_aggregate.aggregate.count;
+  const { resolveLink } = useIPFS();
+  const [nftMedia, setNFTMedia] = useState('');
+
 
   const nft_path = {
     pathname: '/nft/' + id,
@@ -54,7 +58,9 @@ function FeedPost({ post, index }) {
               <CommentIcon />
             </Link>
             <ShareIcon />
+            {/* {is_nft && <Typography><a href={`https://testnets.opensea.io/assets/${token_address}/${token_id}`}>OpenSea</a></Typography>} */}
             <SaveButton savedPosts={saved_posts} postId={id} />
+
           </div>
           {/* Post Likes Count */}
           <Typography className={classes.likes} variant="subtitle2">

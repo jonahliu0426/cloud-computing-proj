@@ -200,6 +200,7 @@ export const GET_FEED = gql`
       created_at
       media
       location
+      is_nft
       user {
         id
         username

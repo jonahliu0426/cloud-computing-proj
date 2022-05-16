@@ -1,4 +1,5 @@
 // import { userInfo } from "os";
+import { useHistory } from "react-router-dom";
 
 const handleImageUpload = async ({ user, media, stateFunction, gqlFunction, actionType, postData, labels }) => {
     let myHeaders = new Headers();
@@ -31,8 +32,6 @@ const handleImageUpload = async ({ user, media, stateFunction, gqlFunction, acti
                         const url = `https://smart-photo-album-storage.s3.amazonaws.com/${filename}`;
                         const variables = { ...postData, media: url };
                         await gqlFunction({ variables });
-                        // history.push('/');
-                        window.location.reload();
 
                     })
                     .catch(error => console.error(error));

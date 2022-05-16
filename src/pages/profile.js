@@ -19,7 +19,7 @@ import { AuthContext } from "../auth";
 function ProfilePage() {
   const { username } = useParams();
   const { currentUserId } = React.useContext(UserContext);
-  const { account } = React.useContext(WalletContext);
+  const { walletAddress } = React.useContext(WalletContext);
   const classes = useProfilePageStyles();
   const [showOptionMenu, setShowOptionMenu] = React.useState(false);
   const variables = { username };
@@ -73,7 +73,7 @@ function ProfilePage() {
           </Card>
         </Hidden>
         {showOptionMenu && <OptionsMenu handleCloseMenu={handleCloseMenu} />}
-        <ProfileTabs account={account} user={user} isOwner={isOwner} />
+        <ProfileTabs account={walletAddress} user={user} isOwner={isOwner} />
       </div>
     </Layout>
   )
