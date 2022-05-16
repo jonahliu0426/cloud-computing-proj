@@ -1,14 +1,5 @@
 # cloud-computing-proj
 
-## Data Pipeline
-### Architecture
-<img src="data-pipeline/image/pipeline-architecture.png" width="350">
-
-The data pipeline uses Amazon MSK (Managed Apache Kafka) as the message queue, Flink as the stream computing platform, Redis as the processing results cache, and Spring Boot as the backend web service. The last three infrastructures are deployed in Amazon EC2. 
-### API
-* `GET http://34.205.71.184:8080/api/etl/tag/{tag-name}`: add a new tag with `tag-name`.
-* `GET http://34.205.71.184:8080/api/etl/top-tags`: get the top-10 tags (during the previous hour, update every ten seconds). 
-
 ## User Database
 ### Architecture
 <img src="hasura-aws-rds/hasura-aws-rds-architecture.jpg" width="350">
@@ -30,3 +21,19 @@ User Authorization and Authentication uses Amazon Cognito managed by AWS Amplify
 User Posts 
 
 ## Connect Wallet
+
+## Data Pipeline
+
+<img width="469" alt="data-pipeline" src="https://user-images.githubusercontent.com/90872708/168498906-35695af9-f2e7-44d3-9ddc-809604b2b15c.png">
+<p align="center"><b>Architecture</b></p>
+The data pipeline uses Amazon MSK (Managed Streaming for Kafka) as the message queue, Flink as the stream computing platform, Redis as the processing results cache, and Spring Boot as the backend web service. The last three infrastructures are deployed in Amazon EC2. 
+
+<img width="585" alt="execution-plan" src="https://user-images.githubusercontent.com/90872708/168498714-ad3d4315-809b-40f0-b495-2529eb7a90ee.png">
+<p align="center"><b>Flink Execution Plan</b></p>
+Flink uses Kafka as the data source and extracts the timestamp of each record, the mapped data will be sent to a sliding window with a window size of 3 hours and a window slide of 10 seconds. The operators then calculate the top ten most frequent labels in each window and sink them to Redis. 
+
+The throughput for plain data is 2 GB per minute, but the performance of labeled data processing is limited due to the large ratio of our window size to slide size, so the processing speed is 10000 new labels per minute. Furthermore, by increasing the cluster size, this can be scaled linearly.
+
+## Simulated Trading
+<img width="437" alt="trading-architecture" src="https://user-images.githubusercontent.com/90872708/168488593-053f04d9-bb57-48f9-b108-fb10897c0845.png">
+
