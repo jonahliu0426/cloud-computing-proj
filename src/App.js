@@ -325,11 +325,12 @@ function App() {
     const followingIds = me.following.map(({ user }) => user.id)
     const followerIds = me.followers.map(({ user }) => user.id);
     const feedIds = [...followingIds, currentUserId];
+    const token = me.token;
 
 
 
     return (
-      <UserContext.Provider value={{ totalNFT, setTotalNFT, me, currentUserId, followerIds, followingIds, feedIds, NFTBalance, setNFTBalance }}>
+      <UserContext.Provider value={{ totalNFT, token, setTotalNFT, me, currentUserId, followerIds, followingIds, feedIds, NFTBalance, setNFTBalance }}>
         <WalletContext.Provider value={{ marketAddress, setMarketAddress, contractABI, setContractABI, walletAddress, connectWallet, disconnect, chainId, network, web3User, web3 }}>
           <Switch location={isModalOpen ? prevLocation.current : location}>
             <Route exact path='/create' component={CreatePage} />

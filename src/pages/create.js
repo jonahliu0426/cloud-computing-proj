@@ -9,17 +9,17 @@ import { UserContext } from "../App";
 import { Typography } from "@material-ui/core";
 
 function CreateNft() {
-    const token = {
-        'id': 'eyJraWQiOiJlQU41NzlZY0t2OWo5WGpCaXUrTVJqVlJxQ3pNdlpYUEtITEJqcE5tOHFnPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIyZTY2YmI1OC04NDQwLTQ0ZmEtYmY3MS0xNmZhYTExMWE0YmIiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfRjFKbEFxU2h2IiwiY29nbml0bzp1c2VybmFtZSI6ImpvbmFobGl1Iiwib3JpZ2luX2p0aSI6IjEwMmJjOTQ1LTlkZTctNDcwNi1hMmIwLWI5NjdjYzI4Mjg3NiIsImF1ZCI6IjJ0NGo3NDlkdGszYmllMjc5c2pndmViZ2xiIiwiZXZlbnRfaWQiOiJlOGUxNTViZS1iMmU1LTQyZWQtODA0ZS1mMjk1YTc0MzlkYmQiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTY1MjgwMTEwMCwiZXhwIjoxNjUyODg3NTAwLCJpYXQiOjE2NTI4MDExMDAsImp0aSI6IjRjOGQwMThjLTZmMTEtNGM5Ny1iNzlmLTY1ZGYxMDA4OWExYiIsImVtYWlsIjoiamwxMTI5NUBueXUuZWR1In0.0TuXKNM6FTKksuquIzKSGV8dsfAa8aYBcYhYwo4Csw1Up1YCx7nm7kV5nTdf8iKhGDXCAgvMYCgQ2v8t_6pAtAVl9_2D3Z9szerXcQjJCSE2EdDAw_B32JmokvQNnomoTTd72ZS4WIAO8Wv6G1UTcV5rq2qTU_FFM1zKoh4-wEJLaJ0dIMa3gOxrvLA2xbyOtUCXc8hZlaQXRpPcppIr1-LZedT4FqO12wnqpxf3fbCPeXAnpccSYlHxoxjD91ViX7B80utYZMbIiz9JF3AR_toqpYZxTf1cyM7xw1V7erazVzmNj1xa8ljljCBtAvPmoh0AoYsRwEeRV9NsPRVOUg',
-    }
-    console.log(`Bearer ${token['id']}`);
+    // const token = {
+    //     'id': 'eyJraWQiOiJlQU41NzlZY0t2OWo5WGpCaXUrTVJqVlJxQ3pNdlpYUEtITEJqcE5tOHFnPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIyZTY2YmI1OC04NDQwLTQ0ZmEtYmY3MS0xNmZhYTExMWE0YmIiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfRjFKbEFxU2h2IiwiY29nbml0bzp1c2VybmFtZSI6ImpvbmFobGl1Iiwib3JpZ2luX2p0aSI6IjEwMmJjOTQ1LTlkZTctNDcwNi1hMmIwLWI5NjdjYzI4Mjg3NiIsImF1ZCI6IjJ0NGo3NDlkdGszYmllMjc5c2pndmViZ2xiIiwiZXZlbnRfaWQiOiJlOGUxNTViZS1iMmU1LTQyZWQtODA0ZS1mMjk1YTc0MzlkYmQiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTY1MjgwMTEwMCwiZXhwIjoxNjUyODg3NTAwLCJpYXQiOjE2NTI4MDExMDAsImp0aSI6IjRjOGQwMThjLTZmMTEtNGM5Ny1iNzlmLTY1ZGYxMDA4OWExYiIsImVtYWlsIjoiamwxMTI5NUBueXUuZWR1In0.0TuXKNM6FTKksuquIzKSGV8dsfAa8aYBcYhYwo4Csw1Up1YCx7nm7kV5nTdf8iKhGDXCAgvMYCgQ2v8t_6pAtAVl9_2D3Z9szerXcQjJCSE2EdDAw_B32JmokvQNnomoTTd72ZS4WIAO8Wv6G1UTcV5rq2qTU_FFM1zKoh4-wEJLaJ0dIMa3gOxrvLA2xbyOtUCXc8hZlaQXRpPcppIr1-LZedT4FqO12wnqpxf3fbCPeXAnpccSYlHxoxjD91ViX7B80utYZMbIiz9JF3AR_toqpYZxTf1cyM7xw1V7erazVzmNj1xa8ljljCBtAvPmoh0AoYsRwEeRV9NsPRVOUg',
+    // }
+    // console.log(`Bearer ${token['id']}`);
     const [title, setTitle] = useState();
     const [description, setDescription] = useState();
     const [media, setMedia] = useState();
     const inputRef = React.useRef();
     const history = useHistory();
     const [creatNFT] = useMutation(CREATE_NFT);
-    const { currentUserId } = useContext(UserContext);
+    const { currentUserId, token } = useContext(UserContext);
     const [isNftCreating, setIsNftCreating] = useState(false);
     const [isNFTCreated, setIsNFTCreated] = useState(false);
     const [txHash, setTxHash] = useState(false);
@@ -27,7 +27,7 @@ function CreateNft() {
 
     async function getUploadUrl() {
         var myHeaders = new Headers();
-        myHeaders.append("Authorization", `Bearer ${token['id']}`);
+        myHeaders.append("Authorization", `Bearer ${token}`);
 
         var requestOptions = {
             method: 'GET',
@@ -70,7 +70,7 @@ function CreateNft() {
 
     async function getAssetMeta(title, description, assetUrl) {
         var myHeaders = new Headers();
-        myHeaders.append("Authorization", `Bearer ${token['id']}`);
+        myHeaders.append("Authorization", `Bearer ${token}`);
         myHeaders.append("Content-Type", "application/json");
 
         var raw = JSON.stringify({
@@ -122,7 +122,7 @@ function CreateNft() {
 
     async function getJobStatus(jobId) {
         var myHeaders = new Headers();
-        myHeaders.append("Authorization", `Bearer ${token['id']}`);
+        myHeaders.append("Authorization", `Bearer ${token}`);
 
         var requestOptions = {
             method: 'GET',
@@ -145,7 +145,7 @@ function CreateNft() {
         var url = "https://un76br25o9.execute-api.us-east-1.amazonaws.com/prod/item"
 
         var myHeaders = new Headers();
-        myHeaders.append("Authorization", `Bearer ${token['id']}`);
+        myHeaders.append("Authorization", `Bearer ${token}`);
         myHeaders.append("Content-Type", "application/json");
 
         var raw = JSON.stringify({
@@ -172,7 +172,7 @@ function CreateNft() {
 
     async function getItemInfo(tokenId) {
         var myHeaders = new Headers();
-        myHeaders.append("Authorization", `Bearer ${token['id']}`);
+        myHeaders.append("Authorization", `Bearer ${token}`);
 
         var requestOptions = {
             method: 'GET',
@@ -195,7 +195,7 @@ function CreateNft() {
         var url = `https://un76br25o9.execute-api.us-east-1.amazonaws.com/prod/item/${this.tokenId}/list`
 
         var myHeaders = new Headers();
-        myHeaders.append("Authorization", `Bearer ${token['id']}`);
+        myHeaders.append("Authorization", `Bearer ${token}`);
         myHeaders.append("Content-Type", "application/json");
 
         var raw = JSON.stringify({
@@ -218,10 +218,10 @@ function CreateNft() {
     }
 
     async function pucharse(tokenId) {
-        var url = `https://un76br25o9.execute-api.us-east-1.amazonaws.com/prod/item/${this.tokenId}/purchase`
+        var url = `https://un76br25o9.execute-api.us-east-1.amazonaws.com/prod/item/${tokenId}/purchase`
 
         var myHeaders = new Headers();
-        myHeaders.append("Authorization", `Bearer ${token['id']}`);
+        myHeaders.append("Authorization", `Bearer ${token}`);
         myHeaders.append("Content-Type", "application/json");
 
         var requestOptions = {

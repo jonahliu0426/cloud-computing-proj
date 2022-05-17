@@ -11,6 +11,7 @@ subscription me($userId: String) {
     last_checked
     created_at
     wallet_address
+    token
     followers {
       user {
         id

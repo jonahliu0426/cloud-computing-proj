@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { useGridPostStyles } from "../../styles";
 import { Link, useHistory } from "react-router-dom";
 import { Image, RecentActors } from "@material-ui/icons";
+import Img from 'react-graceful-image';
+
 
 function GridNFT({ nft }) {
     const history = useHistory();
@@ -31,7 +33,6 @@ function GridNFT({ nft }) {
     const handleOpenPostModal = () => {
         history.push({
             pathname: `/nft/${token_id}`,
-            state: { modal: true }
         })
     }
 
