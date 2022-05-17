@@ -21,9 +21,11 @@ import ProfileBalancePage from "./pages/balance"
 import NewTicket from "./new-ticket/NewTicket"
 import { Ticket } from './new-ticket/Ticket'
 import CoinbaseWalletSDK from '@coinbase/wallet-sdk'
-import Web3 from 'web3'
+import Web3 from 'web3';
+import AWSHttpProvider from './awsHttpProvider';
 import { useMoralis } from "react-moralis";
 import { UPDATE_USER_WALLET } from "./graphql/mutations";
+import CreatePage from './pages/create';
 
 
 
@@ -36,6 +38,8 @@ const APP_NAME = 'cloud computing proj'
 const APP_LOGO_URL = 'https://example.com/logo.png'
 const DEFAULT_ETH_JSONRPC_URL = 'https://mainnet.infura.io/v3/1e1d6b3ca9b84eff9fc0dbc6b70207c9'
 const DEFAULT_CHAIN_ID = 1
+
+const web3 = new Web3(new AWSHttpProvider("nd-nkgfu667argmjc77lsftrrfqk4.ethereum.managedblockchain.us-east-1.amazonaws.com"));
 
 
 function useSearchQuery() {
@@ -324,8 +328,9 @@ function App() {
 
     return (
       <UserContext.Provider value={{ me, currentUserId, followerIds, followingIds, feedIds, NFTBalance, setNFTBalance }}>
-        <WalletContext.Provider value={{ marketAddress, setMarketAddress, contractABI, setContractABI, walletAddress, connectWallet, disconnect, chainId, network, web3User }}>
+        <WalletContext.Provider value={{ marketAddress, setMarketAddress, contractABI, setContractABI, walletAddress, connectWallet, disconnect, chainId, network, web3User, web3 }}>
           <Switch location={isModalOpen ? prevLocation.current : location}>
+            <Route exact path='/create' component={CreatePage} />
             <Route exact path="/" component={FeedPage} />
             <Route path="/nft/:id" component={NftDetail} />
             <Route path="/explore" component={ExplorePage} />

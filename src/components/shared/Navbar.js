@@ -282,6 +282,16 @@ const Links = ({ path }) => {
         <Link to='/help'>
           <img src="https://img.icons8.com/ios-glyphs/30/000000/question-mark.png" width="20px" height="20px" alt="help page" />
         </Link>
+        <Button>
+          <Link to='/create'>
+            Create NFT
+          </Link>
+        </Button>
+        <Button>
+          <Link to='/show'>
+            NFT Gallery
+          </Link>
+        </Button>
         {!walletAddress ? (
           <Button
             style={{ backgroundColor: "#764bbb", color: "white" }}
