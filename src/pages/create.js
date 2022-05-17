@@ -6,6 +6,7 @@ import { useHistory } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import { CREATE_NFT } from "../graphql/mutations";
 import { UserContext } from "../App";
+import { Typography } from "@material-ui/core";
 
 function CreateNft() {
     const token = {
@@ -19,6 +20,9 @@ function CreateNft() {
     const history = useHistory();
     const [creatNFT] = useMutation(CREATE_NFT);
     const { currentUserId } = useContext(UserContext);
+    const [isNftCreating, setIsNftCreating] = useState(false);
+    const [isNFTCreated, setIsNFTCreated] = useState(false);
+    const [txHash, setTxHash] = useState(false);
 
 
     async function getUploadUrl() {
@@ -249,6 +253,7 @@ function CreateNft() {
         const assetMetadataUrl = await getAssetMeta(title, description, assetUrl);
         console.log(assetMetadataUrl);
         const jobId = await createNft(assetMetadataUrl, 5);
+        setIsNftCreating(true);
         console.log(jobId);
         while (true) {
             const { status, result } = await getJobStatus(jobId);
@@ -257,19 +262,26 @@ function CreateNft() {
                 const data = JSON.parse(result);
                 console.log(data['tokenId']);
                 const tokenId = data['tokenId']
+                setTxHash(data['txHash']);
                 const variables = {
                     userId: currentUserId,
                     metadataUrl: assetMetadataUrl,
-                    tokenId: tokenId
+                    tokenId: tokenId,
+                    txHash: data['txHash']
                 }
                 await creatNFT({ variables })
-                history.push({
-                    pathname: '/nft',
-                    // state: {
-                    //     result: result,
-                    //     url: assetMetadataUrl
-                    // }
-                });
+                setIsNftCreating(false)
+                setIsNFTCreated(true);
+                setMedia(null);
+                setTitle('');
+                setDescription('');
+                // history.push({
+                //     pathname: '/nft',
+                //     // state: {
+                //     //     result: result,
+                //     //     url: assetMetadataUrl
+                //     // }
+                // });
                 break;
             }
             console.log(status, result);
@@ -315,6 +327,16 @@ function CreateNft() {
                     Submit
                 </Button>
             </Form>
+            {isNftCreating && (
+                <Typography variant='body1' component='h3'>
+                    Creating your NFT... Please don't close the window
+                </Typography>
+            )}
+            {!isNftCreating && isNFTCreated && (
+                <Typography variant='body1' component='h3'>
+                    Success! Find your transaction on <a href={`https://ropsten.etherscan.io/tx/${txHash}`}>Etherscan</a>!
+                </Typography>
+            )}
         </Layout>
     )
 }

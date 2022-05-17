@@ -315,6 +315,7 @@ query getNFT {
     user_id
     metadata_url
     token_id
+    tx_hash
   }
 }
 `
