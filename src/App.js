@@ -26,6 +26,7 @@ import AWSHttpProvider from './awsHttpProvider';
 import { useMoralis } from "react-moralis";
 import { UPDATE_USER_WALLET } from "./graphql/mutations";
 import CreatePage from './pages/create';
+import NFTGallery from './pages/gallery';
 
 
 
@@ -49,6 +50,7 @@ function useSearchQuery() {
 }
 
 function App() {
+  const [totalNFT, setTotalNFT] = React.useState(20);
   const { authState, getUser } = React.useContext(AuthContext);
   const [updateUserWallet] = useMutation(UPDATE_USER_WALLET);
   const [NFTBalance, setNFTBalance] = useState([]);
@@ -327,10 +329,11 @@ function App() {
 
 
     return (
-      <UserContext.Provider value={{ me, currentUserId, followerIds, followingIds, feedIds, NFTBalance, setNFTBalance }}>
+      <UserContext.Provider value={{ totalNFT, setTotalNFT, me, currentUserId, followerIds, followingIds, feedIds, NFTBalance, setNFTBalance }}>
         <WalletContext.Provider value={{ marketAddress, setMarketAddress, contractABI, setContractABI, walletAddress, connectWallet, disconnect, chainId, network, web3User, web3 }}>
           <Switch location={isModalOpen ? prevLocation.current : location}>
             <Route exact path='/create' component={CreatePage} />
+            <Route exact path='/nft' component={NFTGallery} />
             <Route exact path="/" component={FeedPage} />
             <Route path="/nft/:id" component={NftDetail} />
             <Route path="/explore" component={ExplorePage} />

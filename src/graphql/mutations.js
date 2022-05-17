@@ -167,3 +167,10 @@ mutation createNFTPost($userId: uuid!, $media: String!, $isNFT: Int!, $location:
     affected_rows
   }
 }`
+
+export const CREATE_NFT = gql`
+mutation createNFT($userId: String!, $metadataUrl: String!, $tokenId: Int!) {
+  insert_nfts(objects: { metadata_url: $metadataUrl, user_id: $userId, token_id: $tokenId }) {
+    affected_rows
+  }
+}`

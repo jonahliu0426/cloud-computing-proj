@@ -4,16 +4,16 @@ import { useHistory } from "react-router-dom";
 const handleImageUpload = async ({ user, media, stateFunction, gqlFunction, actionType, postData, labels }) => {
     let myHeaders = new Headers();
     let filename = media['name'];
-    console.log(filename)
+
     myHeaders.append("Content-Type", `image/${filename.slice(filename.lastIndexOf('.') + 1)}`);
     let fr = new FileReader();
-    console.log(media);
+
     fr.readAsArrayBuffer(media);
     let file = null;
     let id = makeid(10);
-    console.log(id);
+
     filename = id + filename;
-    console.log(filename);
+
     fr.onload = function () {
         try {
             file = new Uint8Array(fr.result);

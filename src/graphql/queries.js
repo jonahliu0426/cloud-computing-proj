@@ -308,3 +308,13 @@ query getPost($postId: uuid!) {
   }
 }
 `
+
+export const GET_NFTs = gql`
+query getNFT {
+  nfts {
+    user_id
+    metadata_url
+    token_id
+  }
+}
+`

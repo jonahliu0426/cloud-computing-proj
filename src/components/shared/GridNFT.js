@@ -1,18 +1,36 @@
 import { Typography } from "@material-ui/core";
-import React from "react";
+import React, { useState } from "react";
 import { useGridPostStyles } from "../../styles";
 import { Link, useHistory } from "react-router-dom";
-import { Image } from "@material-ui/icons";
+import { Image, RecentActors } from "@material-ui/icons";
 
 function GridNFT({ nft }) {
     const history = useHistory();
 
     const classes = useGridPostStyles();
-    const { name, description, img_url } = nft
+    const { user_id, metadata_url, token_id } = nft
+    const [title, setTitle] = useState();
+    const [description, setDescription] = useState();
+    const [imgUrl, setImgUrl] = useState();
+
+    React.useEffect(() => {
+        async function fetchData() {
+            try {
+                const response = await fetch(metadata_url);
+                const data = await response.json();
+                setTitle(data['title']);
+                setDescription(data['description']);
+                setImgUrl(data['url']);
+            } catch (error) {
+                console.error(error)
+            }
+        }
+        fetchData();
+    }, [])
 
     const handleOpenPostModal = () => {
         history.push({
-            pathname: `/p/${img_url}`,
+            pathname: `/nft/${token_id}`,
             state: { modal: true }
         })
     }
@@ -26,7 +44,7 @@ function GridNFT({ nft }) {
             <div className={classes.gridPostOverlay}>
             </div>
             <img
-                src={nft?.image || nft['metadata']['image_url'] || "error"}
+                src={imgUrl}
                 alt="nft"
                 className={classes.image}
             />

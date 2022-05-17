@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Form, Col, Button } from "react-bootstrap"
 import 'bootstrap/dist/css/bootstrap.min.css'
 import Layout from "../components/shared/Layout"
 import { useHistory } from "react-router-dom";
+import { useMutation } from "@apollo/client";
+import { CREATE_NFT } from "../graphql/mutations";
+import { UserContext } from "../App";
 
 function CreateNft() {
     const token = {
@@ -14,6 +17,8 @@ function CreateNft() {
     const [media, setMedia] = useState();
     const inputRef = React.useRef();
     const history = useHistory();
+    const [creatNFT] = useMutation(CREATE_NFT);
+    const { currentUserId } = useContext(UserContext);
 
 
     async function getUploadUrl() {
@@ -122,7 +127,7 @@ function CreateNft() {
         };
 
         try {
-            const response = await fetch("https://un76br25o9.execute-api.us-east-1.amazonaws.com/prod/job/f1505ab4-c11f-45f3-9057-9173278fcae9", requestOptions)
+            const response = await fetch("https://un76br25o9.execute-api.us-east-1.amazonaws.com/prod/job/" + jobId, requestOptions)
             const data = await response.json();
             const status = data["status"]
             const result = data["result"]
@@ -249,17 +254,27 @@ function CreateNft() {
             const { status, result } = await getJobStatus(jobId);
             if (status[0] === 'S') {
                 console.log(status, result);
+                const data = JSON.parse(result);
+                console.log(data['tokenId']);
+                const tokenId = data['tokenId']
+                const variables = {
+                    userId: currentUserId,
+                    metadataUrl: assetMetadataUrl,
+                    tokenId: tokenId
+                }
+                await creatNFT({ variables })
+                history.push({
+                    pathname: '/nft',
+                    // state: {
+                    //     result: result,
+                    //     url: assetMetadataUrl
+                    // }
+                });
                 break;
             }
             console.log(status, result);
             sleep(1000);
         }
-        history.push({
-            pathname: `/show`,
-            state: {
-                result: result
-            }
-        });
     }
 
     function sleep(time) {
