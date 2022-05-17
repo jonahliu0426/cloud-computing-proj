@@ -26,7 +26,7 @@ function useMoralisDapp() {
 
 const web3 = new Web3(new AWSHttpProvider("nd-nkgfu667argmjc77lsftrrfqk4.ethereum.managedblockchain.us-east-1.amazonaws.com"));
 
-const nft_contract_address = "0xc8202F5C3f4276e6be6f8F45E683A71561D4Ce35";
+const nft_contract_address = "0x6915DEcD35c1Aa5d96Ed2a99C8F439e2E1f10831";
 
 const initialValue = [
     {
@@ -112,7 +112,7 @@ const AddPostDialog = ({ media, handleClose }) => {
             await metadataFile.saveIPFS();
             const metadataURI = metadataFile.ipfs();
             console.log('metadataURI', metadataURI)
-            const txt = await mintToken(metadataURI).then(async (txt) => {
+            const tx = await mintToken(metadataURI).then(async (txt) => {
                 notify(txt);
                 const variables = {
                     userId: currentUserId,
@@ -124,6 +124,13 @@ const AddPostDialog = ({ media, handleClose }) => {
                 console.log('nft variables', variables)
                 await createNFTPost({ variables })
             })
+            console.log('tx', tx);
+            tx.on('receipt', function (receipt) {
+                // eslint-disable-next-line no-undef
+                console.log('token id hex,', logs[0].topics[3]); // this prints the hex value of the tokenId
+                // eslint-disable-next-line no-undef
+                web3.utils.hexToNumber('token id', logs[0].topics[3])
+            });
 
         } catch (error) {
             console.error(error)
@@ -141,7 +148,7 @@ const AddPostDialog = ({ media, handleClose }) => {
                 name: 'tokenURI'
             }]
         }, [_uri]);
-
+        console.log('encoded function', encodedFunction);
         const transactionParameters = {
             to: nft_contract_address,
             // eslint-disable-next-line no-undef
@@ -201,9 +208,8 @@ const AddPostDialog = ({ media, handleClose }) => {
                         color="primary"
                         variant="contained"
                         className={classes.share}
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || !walletAddress}
                         onClick={handleCreateNFT}
-                        disabled={!walletAddress}
                     >
                         Create NFT
                     </Button>&nbsp;&nbsp;

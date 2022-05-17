@@ -59,7 +59,7 @@ function ProfileTabs({ user, isOwner, account }) {
           } else if (NFT?.token_uri) {
 
             try {
-              await fetch(`https://shielded-mountain-80433.herokuapp.com//${NFT.token_uri}`)
+              await fetch(`https://shielded-mountain-80433.herokuapp.com/${NFT.token_uri}`)
                 .then(response => response.json())
                 .then(data => {
                   NFT.image = resolveLink(data.image);
