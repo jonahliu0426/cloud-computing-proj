@@ -16,7 +16,7 @@ import { ME } from "./graphql/subscriptions";
 import LoadingScreen from "./components/shared/LoadingScreen";
 import Amplify, { Auth, Hub } from 'aws-amplify';
 import awsconfig from './aws-exports';
-import NftDetail from "./pages/detail"
+import NftDelta from "./pages/delta"
 import ProfileBalancePage from "./pages/balance"
 import NewTicket from "./new-ticket/NewTicket"
 import { Ticket } from './new-ticket/Ticket'
@@ -27,7 +27,7 @@ import { useMoralis } from "react-moralis";
 import { UPDATE_USER_WALLET } from "./graphql/mutations";
 import CreatePage from './pages/create';
 import NFTGallery from './pages/gallery';
-
+import NftDetail from './pages/detail'
 
 
 // Auth.configure(awsconfig);

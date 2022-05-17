@@ -288,7 +288,7 @@ const Links = ({ path }) => {
           </Link>
         </Button>
         <Button>
-          <Link to='/show'>
+          <Link to='/nft'>
             NFT Gallery
           </Link>
         </Button>
