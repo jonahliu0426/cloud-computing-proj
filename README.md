@@ -1,7 +1,6 @@
 # cloud-computing-proj
 
-<img width="300" alt="mario" src="https://user-images.githubusercontent.com/90872708/168942773-007d5cc4-b529-4891-a890-e49b235980da.png"><img width="300" alt="ape" src="https://user-images.githubusercontent.com/90872708/168943365-3b5d30b7-d3aa-4639-91cc-d3f825c17a3f.png">
-<img width="300" alt="gallery" src="https://user-images.githubusercontent.com/90872708/168943375-9d36f603-d9f4-4008-aef8-658d3db7a4ca.png">
+<img width="270" alt="mario" src="https://user-images.githubusercontent.com/90872708/168942773-007d5cc4-b529-4891-a890-e49b235980da.png"><img width="270" alt="ape" src="https://user-images.githubusercontent.com/90872708/168943365-3b5d30b7-d3aa-4639-91cc-d3f825c17a3f.png"><img width="270" alt="gallery" src="https://user-images.githubusercontent.com/90872708/168943375-9d36f603-d9f4-4008-aef8-658d3db7a4ca.png">
 
 <img width="500" alt="transaction" src="https://user-images.githubusercontent.com/90872708/168943383-bd99bd98-93b7-4c17-b3b2-a161189fed25.png">
 
