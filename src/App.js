@@ -315,7 +315,7 @@ function App() {
     );
   }
 
-
+  console.log('data', data)
 
   if (data) {
     console.log('data, ', data);

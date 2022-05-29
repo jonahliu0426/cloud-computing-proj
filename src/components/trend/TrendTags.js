@@ -48,33 +48,7 @@ export default function TrendTags() {
         }
     }
 
-    // constructor(props) {
-    //     super(props)
-    //     this.state = {
-    //         error: null,
-    //         isLoaded: false,
-    //         tags: [],
-    //     }
-    // }
 
-    // componentDidMount() {
-    //     fetch("https://lifjc152o5.execute-api.us-east-1.amazonaws.com/prod/etl/top-tags")
-    //         .then(res => res.json())
-    //         .then(
-    //             (result) => {
-    //                 this.setState({
-    //                     isLoaded: true,
-    //                     tags: result.data
-    //                 })
-    //             },
-    //             (error) => {
-    //                 this.setState({
-    //                     isLoaded: true,
-    //                     error
-    //                 })
-    //             }
-    //         )
-    // }
 
     return (
         <article className={classes.article}>

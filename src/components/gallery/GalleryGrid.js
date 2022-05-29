@@ -16,39 +16,7 @@ function GalleryGrid() {
     const { totalNFT } = React.useContext(UserContext);
     const { data, loading } = useQuery(GET_NFTs);
     const history = useHistory();
-    // const {result, url} = history.location.state;
 
-    // const variables = { feedIds }
-    // console.log({ variables });
-    // const { data, loading, error } = useQuery(EXPLORE_POSTS, { variables });
-    // const {  } = explorePosts()
-    // console.log('data', data);
-    // console.log('loading', loading);
-    // React.useEffect(async () => {
-    //     async function getItemInfo(tokenId) {
-    //         var myHeaders = new Headers();
-    //         myHeaders.append("Authorization", `Bearer ${token['id']}`);
-
-    //         var requestOptions = {
-    //             method: 'GET',
-    //             headers: myHeaders,
-    //             redirect: 'follow'
-    //         };
-
-    //         try {
-    //             const response = await fetch("https://un76br25o9.execute-api.us-east-1.amazonaws.com/prod//item/" + tokenId, requestOptions);
-    //             const data = await response.json();
-    //             const owner = data['owner'];
-    //             const marketplace = data['marketplace'];
-    //             return { owner, marketplace };
-    //         } catch (error) {
-    //             console.error(error);
-    //         }
-    //     }
-    //     for (let i = 1; i <= totalNFT; i++){
-    //         const { owner, marketplace } = await getItemInfo(i);
-    //     }
-    // }, [])
 
     if (loading) return <LoadingIcon />
     console.log(data);

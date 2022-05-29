@@ -72,7 +72,7 @@ root.render(
   <ErrorBoundary>
     <ApolloProvider client={client}>
       <AuthProvider>
-        <MoralisProvider serverUrl="https://r4umfs4xjt7v.usemoralis.com:2053/server" appId="RPtsniAdE4ITyRRzoaUDVB0BoAMtMCSBPCgZwB5f">
+        <MoralisProvider serverUrl="https://rvtw6jzbmhzo.usemoralis.com:2053/server" appId="2CvwevTroTWOEnnDS6aWYBlEAwGIeCXLZeHUJ26V">
           <MuiThemeProvider theme={theme}>
             <CssBaseline />
             <Router>

@@ -36,7 +36,7 @@ function CreateNft() {
         };
 
         try {
-            const response = await fetch("https://un76br25o9.execute-api.us-east-1.amazonaws.com/prod/upload", requestOptions)
+            const response = await fetch("https://eznz6cpu1f.execute-api.us-east-1.amazonaws.com/prod/upload", requestOptions)
             const data = response.json();
             return data;
         }
@@ -87,7 +87,7 @@ function CreateNft() {
         };
 
         try {
-            const response = await fetch("https://un76br25o9.execute-api.us-east-1.amazonaws.com/prod/assets", requestOptions)
+            const response = await fetch("https://eznz6cpu1f.execute-api.us-east-1.amazonaws.com/prod/assets", requestOptions)
             const data = await response.json();
             const assetMetadataUrl = data["assetMetadataUrl"];
             return assetMetadataUrl
@@ -131,7 +131,7 @@ function CreateNft() {
         };
 
         try {
-            const response = await fetch("https://un76br25o9.execute-api.us-east-1.amazonaws.com/prod/job/" + jobId, requestOptions)
+            const response = await fetch("https://eznz6cpu1f.execute-api.us-east-1.amazonaws.com/prod/job/" + jobId, requestOptions)
             const data = await response.json();
             const status = data["status"]
             const result = data["result"]
@@ -142,7 +142,7 @@ function CreateNft() {
     }
 
     async function createNft(assetMetadataUrl, royalty) {
-        var url = "https://un76br25o9.execute-api.us-east-1.amazonaws.com/prod/item"
+        var url = "https://eznz6cpu1f.execute-api.us-east-1.amazonaws.com/prod/item"
 
         var myHeaders = new Headers();
         myHeaders.append("Authorization", `Bearer ${token}`);
@@ -181,7 +181,7 @@ function CreateNft() {
         };
 
         try {
-            const response = await fetch("https://un76br25o9.execute-api.us-east-1.amazonaws.com/prod//item/" + tokenId, requestOptions);
+            const response = await fetch("https://eznz6cpu1f.execute-api.us-east-1.amazonaws.com/prod/item/" + tokenId, requestOptions);
             const data = await response.json();
             const owner = data['owner'];
             const marketplace = data['marketplace'];
@@ -192,7 +192,7 @@ function CreateNft() {
     }
 
     async function addForSell(tokenId, price) {
-        var url = `https://un76br25o9.execute-api.us-east-1.amazonaws.com/prod/item/${this.tokenId}/list`
+        var url = `https://eznz6cpu1f.execute-api.us-east-1.amazonaws.com/prod/item/${this.tokenId}/list`
 
         var myHeaders = new Headers();
         myHeaders.append("Authorization", `Bearer ${token}`);
@@ -211,14 +211,10 @@ function CreateNft() {
 
         submitJob(url, requestOptions)
 
-        // fetch("https://un76br25o9.execute-api.us-east-1.amazonaws.com/prod/item/6/list", requestOptions)
-        //   .then(response => response.text())
-        //   .then(result => console.log(result))
-        //   .catch(error => console.log('error', error));
     }
 
     async function pucharse(tokenId) {
-        var url = `https://un76br25o9.execute-api.us-east-1.amazonaws.com/prod/item/${tokenId}/purchase`
+        var url = `https://eznz6cpu1f.execute-api.us-east-1.amazonaws.com/prod/item/${tokenId}/purchase`
 
         var myHeaders = new Headers();
         myHeaders.append("Authorization", `Bearer ${token}`);

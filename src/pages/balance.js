@@ -91,7 +91,7 @@ function ProfileBalancePage({ history }) {
     redirect: 'follow'
   };
 
-  fetch("https://un76br25o9.execute-api.us-east-1.amazonaws.com/prod/account", requestOptions)
+  fetch("https://eznz6cpu1f.execute-api.us-east-1.amazonaws.com/prod/account", requestOptions)
     .then(response => response.json())
     .then(result => {
       setBalance(result["balance"])
@@ -103,11 +103,7 @@ function ProfileBalancePage({ history }) {
   if (loading) {
     return <LoadingScreen />
   }
-  // fetch("https://lifjc152o5.execute-api.us-east-1.amazonaws.com/prod/user/balance/" + data.users_by_pk.name)
-  //     .then(res => res.json())
-  //     .then((res) => {
-  //         setBalance(res.data)
-  //     })
+
 
   return (
     <Layout title="Edit Profile">
